@@ -29,21 +29,29 @@
 							</select>
 						</div>
 						<div class="input-group input-group-lg">
-	            <input
+				            <input
 								type="text"
 								name="keyword"
 								class="form-control form-control-lg"
 								placeholder="Enter keyword"
 								required="" />
-              <span class="input-group-btn">
-                	<button type="submit" class="btn btn-warning btn-flat">
-										<i class="fa fa-search"></i>
-									</button>
-              </span>
-	          </div>
+				          	<span class="input-group-btn">
+				            	<button type="submit" class="btn btn-warning btn-flat">
+									<i class="fa fa-search"></i>
+								</button>
+				          	</span>
+	          			</div>
 					</div>
 				</div>
 			</form>
+			<?php if ($this->session->flashdata('unvalid_search')) : ?>
+				<div class="col-md-4 col-xs-12 center-content">
+					<div class="alert alert-warning alert-dismissible">
+		                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		               	<?= $this->session->flashdata('unvalid_search'); ?>
+		            </div>
+				</div>
+			<?php endif; ?>
   		</div>
 	</div>
 </section>

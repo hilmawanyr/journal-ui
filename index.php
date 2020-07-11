@@ -53,7 +53,7 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	switch ($_SERVER['HTTP_HOST']) {
+	switch (explode(':', $_SERVER['HTTP_HOST'])[0]) {
 		case 'localhost':
 			$env = 'development';
 			break;

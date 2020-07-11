@@ -23,7 +23,23 @@
 			: '' ?>
 	<tr>
 		<th>URL</th>
-		<td><a href="<?= $data['url'] ?>"><i class="fa fa-external-link"></i> <?= $data['url'] ?></a></td>
+		<td>
+			<!-- for handle response from EuropePMC -->
+			<?php if (is_array($data['url'])) : ?>
+				<?php if (count($data['url']) > 1) : ?>
+					<ul>
+						<?php foreach ($data['url'] as $urls) : ?>
+							<li><a href="<?= $urls ?>"><i class="fa fa-external-link"></i> <?= $urls ?></a></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php else : ?>
+					<a href="<?= implode('', $data['url']) ?>"><i class="fa fa-external-link"></i> <?= implode('', $data['url']) ?></a>
+				<?php endif; ?>
+			<!-- for handle response from Crossref -->
+			<?php else : ?>
+				<a href="<?= $data['url'] ?>"><i class="fa fa-external-link"></i> <?= $data['url'] ?></a>
+			<?php endif; ?>
+		</td>
 	</tr>
 
 	<?= !empty($data['publisher'])
@@ -39,14 +55,21 @@
 			: '' ?>
 
 	<?php if (!empty($data['license'])) {
-		$_license = '<tr><th>License</th><td>';
-		foreach ($data['license'] as $license) {
-			$_license .= '<ul><li>URL: <a href="'.$license->URL.'"><i class="fa fa-external-link"></i> '.$license->URL.'</a></li>';
-			$_license .= '<li>Date time: '.str_replace(['T','Z'], ' ', $license->start->{'date-time'}).'</li>';
-			$_license .= '<li>Timestamp: '.$license->start->timestamp.'</li></ul>';
+		// handle response from Crossref
+		if (is_array($data['license'])) {
+			$_license = '<tr><th>License</th><td>';
+			foreach ($data['license'] as $license) {
+				$_license .= '<ul><li>URL: <a href="'.$license->URL.'"><i class="fa fa-external-link"></i> '.$license->URL.'</a></li>';
+				$_license .= '<li>Date time: '.str_replace(['T','Z'], ' ', $license->start->{'date-time'}).'</li>';
+				$_license .= '<li>Timestamp: '.$license->start->timestamp.'</li></ul>';
+			}
+			$_license .= '</td></tr>';
+			echo $_license;
+
+		// handle response from EuropePMC
+		} else {
+			echo '<tr><th>License</th><td>'.$data['license'].'</td></tr>';
 		}
-		$_license .= '</td></tr>';
-		echo $_license;
 	} ?>
 
 	<?= !empty($data['prefix'])

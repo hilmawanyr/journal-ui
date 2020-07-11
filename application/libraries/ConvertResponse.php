@@ -76,14 +76,24 @@ class ConvertResponse
 	{
 		foreach ($data as $value) {
 			$response[] = [
-				'title'  => $value->title,
-				'type'   => $value->pubType,
-				'author' => $value->authorString,
-				'url'    => '',
-				'doi'    => $value->doi
+				'title'  => isset($value->title) ? $value->title : '',
+				'type'   => implode(', ',$value->pubTypeList->pubType),
+				'author' => isset($value->authorString) ? $value->authorString : '',
+				'url'    => isset($value->fullTextUrlList) 
+								? $this->_resolve_pmc_url($value->fullTextUrlList->fullTextUrl) 
+								: '',
+				'doi'    => isset($value->doi) ? $value->doi : ''
 			];
 		}
 		return $response;
+	}
+
+	protected function _resolve_pmc_url(array $pmcUrl) : array
+	{
+		foreach ($pmcUrl as $url) {
+			$urls[] = $url->url;
+		}
+		return $urls;
 	}
 
 	public function convert_detail(string $host, object $data) : array
@@ -91,6 +101,10 @@ class ConvertResponse
 		switch ($host) {
 			case 'CRF':
 				return $this->_cnvrt_dtl_crf($data);
+				break;
+
+			case 'PMC':
+				return $this->_cnvrt_dtl_pmc($data);
 				break;
 			
 			default:
@@ -120,6 +134,31 @@ class ConvertResponse
 		$response['publised_online'] = isset($data->{'published-online'}) ? $data->{'published-online'} : '';
 		$response['reference'] = isset($data->reference) ? $data->reference : '';
 		return $response;
+	}
+
+	protected function _cnvrt_dtl_pmc(object $data) : array
+	{
+		$response['title'] = isset($data->{'0'}->title) ? $data->{'0'}->title : '';
+		$response['doi'] = isset($data->{'0'}->doi) ? $data->{'0'}->doi : '';
+		$response['author'] = isset($data->{'0'}->authorString) ? $data->{'0'}->authorString : '-';
+		$response['type'] = isset($data->{'0'}->pubTypeList) ? implode(', ',$data->{'0'}->pubTypeList->pubType) : '';
+		$response['issn'] = isset($data->{'0'}->journalInfo) ? $data->{'0'}->journalInfo->journal->issn : '';
+		$response['isbn'] = '';
+		$response['subject'] = '';
+		$response['url'] = isset($data->{'0'}->fullTextUrlList) 
+								? $this->_resolve_pmc_url($data->{'0'}->fullTextUrlList->fullTextUrl) 
+								: '';
+		$response['publisher'] = '';
+		$response['issue'] = isset($data->{'0'}->journalInfo) ? $data->{'0'}->journalInfo->issue : '';
+		$response['license'] = isset($data->{'0'}->license) ? $data->{'0'}->license : '';
+		$response['prefix'] = '';
+		$response['volume'] = isset($data->{'0'}->journalInfo) ? $data->{'0'}->journalInfo->volume : '';
+		$response['funder'] = '';
+		$response['abstract'] = isset($data->{'0'}->abstractText) ? $data->{'0'}->abstractText : '';
+		$response['member'] = '';
+		$response['publised_online'] = isset($data->{'0'}->firstPublicationDate) ? $data->{'0'}->firstPublicationDate : '';
+		$response['reference'] = '';
+		return $response;	
 	}
 
 }

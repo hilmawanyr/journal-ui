@@ -34,8 +34,25 @@
 		}
 
 		if (!empty($data['url'])) {
-			$url_node = $dom->createElement('URL', $data['url']);
-			$root->appendChild($url_node);
+			// response from EuropePMC
+			if (is_array($data['url'])) {
+				if (count($data['url']) > 1) {
+					$parent_url_node = $dom->createElement('URL');
+					foreach ($data['url'] as $urls) {
+						$child_url_node = $dom->createElement('url', $urls);
+						$parent_url_node->appendChild($child_url_node);
+					}
+					$root->appendChild($parent_url_node);				
+				} else {
+					$url_node = $dom->createElement('URL', implode('', $data['url']));
+					$root->appendChild($url_node);
+				}
+
+			// response from Crossref
+			} else {
+				$url_node = $dom->createElement('URL', $data['url']);
+				$root->appendChild($url_node);	
+			}
 		}
 
 		if (!empty($data['publisher'])) {
@@ -54,18 +71,26 @@
 		}
 
 		if (!empty($data['license'])) {
-			$license_node = $dom->createElement('License');
-			foreach ($data['license'] as $value) {
-				$url_license_node = $dom->createElement('URL', $value->URL);
-				$license_node->appendChild($url_license_node);
+			// response from Crossref
+			if (is_array($data['license'])) {
+				$license_node = $dom->createElement('License');
+				foreach ($data['license'] as $value) {
+					$url_license_node = $dom->createElement('URL', $value->URL);
+					$license_node->appendChild($url_license_node);
 
-				$datetime_license_node = $dom->createElement('DateTime', $value->start->{'date-time'});
-				$license_node->appendChild($datetime_license_node);
+					$datetime_license_node = $dom->createElement('DateTime', $value->start->{'date-time'});
+					$license_node->appendChild($datetime_license_node);
 
-				$timestamp_license_node = $dom->createElement('TimeStamp', $value->start->timestamp);
-				$license_node->appendChild($timestamp_license_node);
+					$timestamp_license_node = $dom->createElement('TimeStamp', $value->start->timestamp);
+					$license_node->appendChild($timestamp_license_node);
+				}
+				$root->appendChild($license_node);
+
+			// reponse from EuropePMC
+			} else {
+				$license_node = $dom->createElement('License', $data['license']);
+				$root->appendChild($license_node);
 			}
-			$root->appendChild($license_node);
 		}
 
 		if (!empty($data['prefix'])) {
@@ -79,7 +104,7 @@
 		}
 
 		if (!empty($data['abstract'])) {
-			$abstract_node = $dom->createElement('Abstract', $data['abstract']);
+			$abstract_node = $dom->createElement('Abstract', htmlentities($data['abstract']));
 			$root->appendChild($abstract_node);
 		}
 

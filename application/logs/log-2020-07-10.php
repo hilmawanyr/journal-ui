@@ -553,3 +553,305 @@ DEBUG - 2020-07-10 09:02:10 --> File loaded: /var/www/journal/application/module
 DEBUG - 2020-07-10 09:02:10 --> File loaded: /var/www/journal/application/modules/template/views/template.php
 INFO - 2020-07-10 09:02:10 --> Final output sent to browser
 DEBUG - 2020-07-10 09:02:10 --> Total execution time: 1.6390
+INFO - 2020-07-10 22:01:49 --> Config Class Initialized
+INFO - 2020-07-10 22:01:49 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:01:49 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:01:49 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:01:49 --> URI Class Initialized
+INFO - 2020-07-10 22:01:49 --> Router Class Initialized
+INFO - 2020-07-10 22:01:49 --> Output Class Initialized
+INFO - 2020-07-10 22:01:49 --> Security Class Initialized
+DEBUG - 2020-07-10 22:01:49 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:01:49 --> Input Class Initialized
+INFO - 2020-07-10 22:01:49 --> Language Class Initialized
+INFO - 2020-07-10 22:01:49 --> Language Class Initialized
+INFO - 2020-07-10 22:01:49 --> Config Class Initialized
+INFO - 2020-07-10 22:01:49 --> Loader Class Initialized
+INFO - 2020-07-10 22:01:49 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:01:49 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:01:49 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:01:49 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:01:49 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:01:49 --> Controller Class Initialized
+DEBUG - 2020-07-10 22:01:49 --> File loaded: /var/www/journal/application/modules/auth/models/Auth_model.php
+INFO - 2020-07-10 22:01:50 --> Config Class Initialized
+INFO - 2020-07-10 22:01:50 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:01:50 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:01:50 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:01:50 --> URI Class Initialized
+INFO - 2020-07-10 22:01:50 --> Router Class Initialized
+INFO - 2020-07-10 22:01:50 --> Output Class Initialized
+INFO - 2020-07-10 22:01:50 --> Security Class Initialized
+DEBUG - 2020-07-10 22:01:50 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:01:50 --> Input Class Initialized
+INFO - 2020-07-10 22:01:50 --> Language Class Initialized
+INFO - 2020-07-10 22:01:50 --> Language Class Initialized
+INFO - 2020-07-10 22:01:50 --> Config Class Initialized
+INFO - 2020-07-10 22:01:50 --> Loader Class Initialized
+INFO - 2020-07-10 22:01:50 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:01:50 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:01:50 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:01:50 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:01:50 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:01:50 --> Controller Class Initialized
+DEBUG - 2020-07-10 22:01:50 --> File loaded: /var/www/journal/application/modules/auth/models/Auth_model.php
+INFO - 2020-07-10 22:02:13 --> Config Class Initialized
+INFO - 2020-07-10 22:02:13 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:02:13 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:02:13 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:02:13 --> URI Class Initialized
+INFO - 2020-07-10 22:02:13 --> Router Class Initialized
+INFO - 2020-07-10 22:02:13 --> Output Class Initialized
+INFO - 2020-07-10 22:02:13 --> Security Class Initialized
+DEBUG - 2020-07-10 22:02:13 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:02:13 --> Input Class Initialized
+INFO - 2020-07-10 22:02:13 --> Language Class Initialized
+INFO - 2020-07-10 22:02:13 --> Language Class Initialized
+INFO - 2020-07-10 22:02:13 --> Config Class Initialized
+INFO - 2020-07-10 22:02:13 --> Loader Class Initialized
+INFO - 2020-07-10 22:02:13 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:02:13 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:02:13 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:02:13 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:02:13 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:02:13 --> Controller Class Initialized
+DEBUG - 2020-07-10 22:02:13 --> File loaded: /var/www/journal/application/modules/auth/models/Auth_model.php
+INFO - 2020-07-10 22:02:18 --> Config Class Initialized
+INFO - 2020-07-10 22:02:18 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:02:18 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:02:18 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:02:18 --> URI Class Initialized
+INFO - 2020-07-10 22:02:18 --> Router Class Initialized
+INFO - 2020-07-10 22:02:18 --> Output Class Initialized
+INFO - 2020-07-10 22:02:18 --> Security Class Initialized
+DEBUG - 2020-07-10 22:02:18 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:02:18 --> Input Class Initialized
+INFO - 2020-07-10 22:02:18 --> Language Class Initialized
+INFO - 2020-07-10 22:02:18 --> Language Class Initialized
+INFO - 2020-07-10 22:02:18 --> Config Class Initialized
+INFO - 2020-07-10 22:02:18 --> Loader Class Initialized
+INFO - 2020-07-10 22:02:18 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:02:18 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:02:18 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:02:18 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:02:18 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:02:18 --> Controller Class Initialized
+DEBUG - 2020-07-10 22:02:18 --> File loaded: /var/www/journal/application/modules/auth/models/Auth_model.php
+DEBUG - 2020-07-10 22:02:18 --> File loaded: /var/www/journal/application/modules/auth/views/auth_v.php
+INFO - 2020-07-10 22:02:18 --> Final output sent to browser
+DEBUG - 2020-07-10 22:02:18 --> Total execution time: 0.0101
+INFO - 2020-07-10 22:02:26 --> Config Class Initialized
+INFO - 2020-07-10 22:02:26 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:02:26 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:02:26 --> URI Class Initialized
+INFO - 2020-07-10 22:02:26 --> Router Class Initialized
+INFO - 2020-07-10 22:02:26 --> Output Class Initialized
+INFO - 2020-07-10 22:02:26 --> Security Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:02:26 --> Input Class Initialized
+INFO - 2020-07-10 22:02:26 --> Language Class Initialized
+INFO - 2020-07-10 22:02:26 --> Language Class Initialized
+INFO - 2020-07-10 22:02:26 --> Config Class Initialized
+INFO - 2020-07-10 22:02:26 --> Loader Class Initialized
+INFO - 2020-07-10 22:02:26 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:02:26 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:02:26 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:02:26 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:02:26 --> Controller Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> File loaded: /var/www/journal/application/modules/auth/models/Auth_model.php
+INFO - 2020-07-10 22:02:26 --> Config Class Initialized
+INFO - 2020-07-10 22:02:26 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:02:26 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:02:26 --> URI Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> No URI present. Default controller set.
+INFO - 2020-07-10 22:02:26 --> Router Class Initialized
+INFO - 2020-07-10 22:02:26 --> Output Class Initialized
+INFO - 2020-07-10 22:02:26 --> Security Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:02:26 --> Input Class Initialized
+INFO - 2020-07-10 22:02:26 --> Language Class Initialized
+INFO - 2020-07-10 22:02:26 --> Language Class Initialized
+INFO - 2020-07-10 22:02:26 --> Config Class Initialized
+INFO - 2020-07-10 22:02:26 --> Loader Class Initialized
+INFO - 2020-07-10 22:02:26 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:02:26 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:02:26 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:02:26 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:02:26 --> Controller Class Initialized
+DEBUG - 2020-07-10 22:02:26 --> File loaded: /var/www/journal/application/modules/landing/views/landing_v.php
+DEBUG - 2020-07-10 22:02:26 --> File loaded: /var/www/journal/application/modules/template/views/template.php
+INFO - 2020-07-10 22:02:26 --> Final output sent to browser
+DEBUG - 2020-07-10 22:02:26 --> Total execution time: 0.0052
+INFO - 2020-07-10 22:02:37 --> Config Class Initialized
+INFO - 2020-07-10 22:02:37 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:02:37 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:02:37 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:02:37 --> URI Class Initialized
+INFO - 2020-07-10 22:02:37 --> Router Class Initialized
+INFO - 2020-07-10 22:02:37 --> Output Class Initialized
+INFO - 2020-07-10 22:02:37 --> Security Class Initialized
+DEBUG - 2020-07-10 22:02:37 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:02:37 --> Input Class Initialized
+INFO - 2020-07-10 22:02:37 --> Language Class Initialized
+INFO - 2020-07-10 22:02:37 --> Language Class Initialized
+INFO - 2020-07-10 22:02:37 --> Config Class Initialized
+INFO - 2020-07-10 22:02:37 --> Loader Class Initialized
+INFO - 2020-07-10 22:02:37 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:02:37 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:02:37 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:02:37 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:02:37 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:02:37 --> Controller Class Initialized
+DEBUG - 2020-07-10 22:02:37 --> File loaded: /var/www/journal/application/modules/mail/views/mail_v.php
+DEBUG - 2020-07-10 22:02:37 --> File loaded: /var/www/journal/application/modules/template/views/template.php
+INFO - 2020-07-10 22:02:37 --> Final output sent to browser
+DEBUG - 2020-07-10 22:02:37 --> Total execution time: 0.0036
+INFO - 2020-07-10 22:02:38 --> Config Class Initialized
+INFO - 2020-07-10 22:02:38 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:02:38 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:02:38 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:02:38 --> URI Class Initialized
+INFO - 2020-07-10 22:02:38 --> Router Class Initialized
+INFO - 2020-07-10 22:02:38 --> Output Class Initialized
+INFO - 2020-07-10 22:02:38 --> Security Class Initialized
+DEBUG - 2020-07-10 22:02:38 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:02:38 --> Input Class Initialized
+INFO - 2020-07-10 22:02:38 --> Language Class Initialized
+INFO - 2020-07-10 22:02:38 --> Language Class Initialized
+INFO - 2020-07-10 22:02:38 --> Config Class Initialized
+INFO - 2020-07-10 22:02:38 --> Loader Class Initialized
+INFO - 2020-07-10 22:02:38 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:02:38 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:02:38 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:02:38 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:02:38 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:02:38 --> Controller Class Initialized
+INFO - 2020-07-10 22:02:38 --> Final output sent to browser
+DEBUG - 2020-07-10 22:02:38 --> Total execution time: 0.0057
+INFO - 2020-07-10 22:03:28 --> Config Class Initialized
+INFO - 2020-07-10 22:03:28 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:03:28 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:03:28 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:03:28 --> URI Class Initialized
+DEBUG - 2020-07-10 22:03:28 --> No URI present. Default controller set.
+INFO - 2020-07-10 22:03:28 --> Router Class Initialized
+INFO - 2020-07-10 22:03:28 --> Output Class Initialized
+INFO - 2020-07-10 22:03:28 --> Security Class Initialized
+DEBUG - 2020-07-10 22:03:28 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:03:28 --> Input Class Initialized
+INFO - 2020-07-10 22:03:28 --> Language Class Initialized
+INFO - 2020-07-10 22:03:28 --> Language Class Initialized
+INFO - 2020-07-10 22:03:28 --> Config Class Initialized
+INFO - 2020-07-10 22:03:28 --> Loader Class Initialized
+INFO - 2020-07-10 22:03:28 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:03:28 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:03:28 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:03:28 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:03:28 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:03:28 --> Controller Class Initialized
+DEBUG - 2020-07-10 22:03:28 --> File loaded: /var/www/journal/application/modules/landing/views/landing_v.php
+DEBUG - 2020-07-10 22:03:28 --> File loaded: /var/www/journal/application/modules/template/views/template.php
+INFO - 2020-07-10 22:03:28 --> Final output sent to browser
+DEBUG - 2020-07-10 22:03:28 --> Total execution time: 0.0039
+INFO - 2020-07-10 22:03:33 --> Config Class Initialized
+INFO - 2020-07-10 22:03:33 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:03:33 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:03:33 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:03:33 --> URI Class Initialized
+INFO - 2020-07-10 22:03:33 --> Router Class Initialized
+INFO - 2020-07-10 22:03:33 --> Output Class Initialized
+INFO - 2020-07-10 22:03:33 --> Security Class Initialized
+DEBUG - 2020-07-10 22:03:33 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:03:33 --> Input Class Initialized
+INFO - 2020-07-10 22:03:33 --> Language Class Initialized
+INFO - 2020-07-10 22:03:33 --> Language Class Initialized
+INFO - 2020-07-10 22:03:33 --> Config Class Initialized
+INFO - 2020-07-10 22:03:33 --> Loader Class Initialized
+INFO - 2020-07-10 22:03:33 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:03:33 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:03:33 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:03:33 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:03:33 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:03:33 --> Controller Class Initialized
+INFO - 2020-07-10 22:03:33 --> Language file loaded: language/english/pagination_lang.php
+INFO - 2020-07-10 22:03:33 --> Pagination Class Initialized
+ERROR - 2020-07-10 22:03:33 --> Cache: Failed to initialize APC; extension not loaded/enabled?
+INFO - 2020-07-10 22:03:33 --> Helper loaded: file_helper
+DEBUG - 2020-07-10 22:03:33 --> Cache adapter "apc" is unavailable. Falling back to "file" backup adapter.
+DEBUG - 2020-07-10 22:03:33 --> Encryption: Auto-configured driver 'openssl'.
+INFO - 2020-07-10 22:03:33 --> Encryption: OpenSSL initialized with method AES-128-CBC.
+INFO - 2020-07-10 22:03:33 --> Encryption Class Initialized
+INFO - 2020-07-10 22:03:33 --> Encryption: OpenSSL initialized with method AES-128-CBC.
+DEBUG - 2020-07-10 22:03:34 --> File loaded: /var/www/journal/application/modules/landing/views/result_v.php
+DEBUG - 2020-07-10 22:03:34 --> File loaded: /var/www/journal/application/modules/template/views/template.php
+INFO - 2020-07-10 22:03:34 --> Final output sent to browser
+DEBUG - 2020-07-10 22:03:34 --> Total execution time: 1.2593
+INFO - 2020-07-10 22:17:01 --> Config Class Initialized
+INFO - 2020-07-10 22:17:01 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:17:01 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:17:01 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:17:01 --> URI Class Initialized
+INFO - 2020-07-10 22:17:01 --> Router Class Initialized
+INFO - 2020-07-10 22:17:01 --> Output Class Initialized
+INFO - 2020-07-10 22:17:01 --> Security Class Initialized
+DEBUG - 2020-07-10 22:17:01 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:17:01 --> Input Class Initialized
+INFO - 2020-07-10 22:17:01 --> Language Class Initialized
+INFO - 2020-07-10 22:17:01 --> Language Class Initialized
+INFO - 2020-07-10 22:17:01 --> Config Class Initialized
+INFO - 2020-07-10 22:17:01 --> Loader Class Initialized
+INFO - 2020-07-10 22:17:01 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:17:01 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:17:01 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:17:01 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:17:01 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:17:01 --> Controller Class Initialized
+INFO - 2020-07-10 22:17:01 --> Language file loaded: language/english/pagination_lang.php
+INFO - 2020-07-10 22:17:01 --> Pagination Class Initialized
+ERROR - 2020-07-10 22:17:01 --> Cache: Failed to initialize APC; extension not loaded/enabled?
+INFO - 2020-07-10 22:17:01 --> Helper loaded: file_helper
+DEBUG - 2020-07-10 22:17:01 --> Cache adapter "apc" is unavailable. Falling back to "file" backup adapter.
+DEBUG - 2020-07-10 22:17:01 --> Encryption: Auto-configured driver 'openssl'.
+INFO - 2020-07-10 22:17:01 --> Encryption: OpenSSL initialized with method AES-128-CBC.
+INFO - 2020-07-10 22:17:01 --> Encryption Class Initialized
+INFO - 2020-07-10 22:17:01 --> Encryption: OpenSSL initialized with method AES-128-CBC.
+DEBUG - 2020-07-10 22:17:02 --> File loaded: /var/www/journal/application/modules/landing/views/result_v.php
+DEBUG - 2020-07-10 22:17:02 --> File loaded: /var/www/journal/application/modules/template/views/template.php
+INFO - 2020-07-10 22:17:02 --> Final output sent to browser
+DEBUG - 2020-07-10 22:17:02 --> Total execution time: 1.3830
+INFO - 2020-07-10 22:18:00 --> Config Class Initialized
+INFO - 2020-07-10 22:18:00 --> Hooks Class Initialized
+DEBUG - 2020-07-10 22:18:00 --> UTF-8 Support Enabled
+INFO - 2020-07-10 22:18:00 --> Utf8 Class Initialized
+INFO - 2020-07-10 22:18:00 --> URI Class Initialized
+INFO - 2020-07-10 22:18:00 --> Router Class Initialized
+INFO - 2020-07-10 22:18:00 --> Output Class Initialized
+INFO - 2020-07-10 22:18:00 --> Security Class Initialized
+DEBUG - 2020-07-10 22:18:00 --> Global POST, GET and COOKIE data sanitized
+INFO - 2020-07-10 22:18:00 --> Input Class Initialized
+INFO - 2020-07-10 22:18:00 --> Language Class Initialized
+INFO - 2020-07-10 22:18:00 --> Language Class Initialized
+INFO - 2020-07-10 22:18:00 --> Config Class Initialized
+INFO - 2020-07-10 22:18:00 --> Loader Class Initialized
+INFO - 2020-07-10 22:18:00 --> Helper loaded: url_helper
+INFO - 2020-07-10 22:18:00 --> Helper loaded: main_helper
+INFO - 2020-07-10 22:18:00 --> Database Driver Class Initialized
+DEBUG - 2020-07-10 22:18:00 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2020-07-10 22:18:00 --> Session: Class initialized using 'files' driver.
+INFO - 2020-07-10 22:18:00 --> Controller Class Initialized
+INFO - 2020-07-10 22:18:00 --> Language file loaded: language/english/pagination_lang.php
+INFO - 2020-07-10 22:18:00 --> Pagination Class Initialized
+ERROR - 2020-07-10 22:18:00 --> Cache: Failed to initialize APC; extension not loaded/enabled?
+INFO - 2020-07-10 22:18:00 --> Helper loaded: file_helper
+DEBUG - 2020-07-10 22:18:00 --> Cache adapter "apc" is unavailable. Falling back to "file" backup adapter.
+DEBUG - 2020-07-10 22:18:00 --> Encryption: Auto-configured driver 'openssl'.
+INFO - 2020-07-10 22:18:00 --> Encryption: OpenSSL initialized with method AES-128-CBC.
+INFO - 2020-07-10 22:18:00 --> Encryption Class Initialized
+INFO - 2020-07-10 22:18:00 --> Encryption: OpenSSL initialized with method AES-128-CBC.
+DEBUG - 2020-07-10 22:18:01 --> File loaded: /var/www/journal/application/modules/landing/views/article_detail_v.php
+INFO - 2020-07-10 22:18:01 --> Final output sent to browser
+DEBUG - 2020-07-10 22:18:01 --> Total execution time: 1.5841

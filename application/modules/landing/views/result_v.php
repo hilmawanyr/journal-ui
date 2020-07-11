@@ -43,17 +43,19 @@
 						<input type="hidden" name="source" value="<?= $this->session->userdata('HOST'); ?>">
 						<div class="form-group">
 							<div class="input-group input-group-lg">
-		            <input
+					            <input
 									type="text"
 									name="keyword"
 									value="<?= $this->input->get('keyword') ?>"
 									class="form-control form-control-lg"
 									placeholder="Enter keyword"
 									required="" />
-                <span class="input-group-btn">
-                  	<button type="button" class="btn btn-warning btn-flat"><i class="fa fa-search"></i></button>
-                </span>
-	            </div>
+					            <span class="input-group-btn">
+					              	<button type="button" class="btn btn-warning btn-flat">
+					              		<i class="fa fa-search"></i>
+					              	</button>
+					            </span>
+				            </div>
 						</div>
 					</form>
 					<div class="breadcrumb">
@@ -75,10 +77,21 @@
 							<p class="mb-0" style="font-size: 14px">Authors:
 								<?= $item['author'] ?>
 							</p>
-							<a href="<?= $item['url'] ?>" style="font-size: 14px">
-								<i class="fa fa-link"></i>
-								<?= $item['url'] ?>
-							</a>
+
+							<?php if (is_array($item['url'])) : ?>
+								<?php foreach ($item['url'] as $urls) : ?>
+									<a href="<?= $urls ?>" style="font-size: 14px">
+										<i class="fa fa-link"></i>
+										<?= $urls ?>
+									</a>
+								<?php endforeach; ?>
+							<?php else : ?>
+								<a href="<?= $item['url'] ?>" style="font-size: 14px">
+									<i class="fa fa-link"></i>
+									<?= $item['url'] ?>
+								</a>
+							<?php endif; ?>
+							
 						</blockquote>
 						<button
 							type="button"
@@ -91,6 +104,9 @@
 						<?php if ($this->session->userdata('login_sess')) : ?>
 							<button
 								type="button"
+								data-target="#inviteModal"
+								data-toggle="modal"
+								onclick="invite('<?= $item['title'] ?>')"
 								class="btn btn-warning">
 								<i class="fa fa-user-plus"></i> Invite
 							</button>
@@ -140,7 +156,7 @@
 				</button>
 				<h5 class="modal-title">Detail</h5>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" id="body">
 
 			</div>
 			<div class="modal-footer">
@@ -150,19 +166,84 @@
 	</div>
 </div>
 
+<div class="modal fade" id="inviteModal">
+	<div class="modal-dialog modal-lg" role="dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h5 class="modal-title">Invite</h5>
+			</div>
+			<form action="<?= base_url('send-mail') ?>" method="post" class="form-horizontal">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="from" class="col-form-label col-sm-2">From</label>
+								<div class="col-sm-10">
+									<input type="text" value="<?= $this->session->userdata('login_sess')['email']; ?>" class="form-control" id="from" readonly="" required="">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="to" class="col-form-label col-sm-2">To</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="recipient" id="to" required="">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="subject" class="col-form-label col-sm-2">Subject</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="subject" id="subject" required="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<textarea id="summernote" name="message" required=""></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn bg-yellow"><i class="fa fa-paper-plane"></i> Send</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 <script>
+	function invite(arg) {
+		$('#summernote').summernote('code', arg)
+	}
+
+	$(document).ready(function() {
+	    // summernote plugin
+	    $('#summernote').summernote({
+	      value: 'lalala',
+	      height: 180,
+	      toolbar: [
+	        ['style', ['style']],
+	        ['font', ['bold', 'underline', 'italic', 'clear']],
+	        ['color', ['color']],
+	        ['para', ['ul', 'ol', 'paragraph']],
+	        ['table', ['table']],
+	        ['insert', ['link']],
+	        ['view', ['fullscreen', 'codeview', 'help']]
+	      ]
+	    });
+	});
+
 	function detail (doi) {
 		$.ajax({
 			url: '<?= base_url('article/detail/') ?>' + doi,
 			beforeSend: function() {
-				$('.modal-body').html(`
+				$('#body').html(`
 					<center>
 						<img src="<?= base_url('assets/img/loading.gif') ?>" style="width: 30%;">
 					</center>
 				`)
 			},
 			success: function(res) {
-				$('.modal-body').html(res);
+				$('#body').html(res);
 			}
 		})
 	}
