@@ -32,7 +32,7 @@ class Search extends CI_Controller {
 		$this->_set_host($this->input->get('source'));
 
 		// check whether article was exist in cache
-		if (!$this->cache->get($encodeURL)) {
+		if (!$this->cache->memcached->get($encodeURL)) {
 			$fetch_data = $this->_used_host($keyword, $page);
 			$this->cache->memcached->save($encodeURL, $fetch_data, 300);
 		}
