@@ -75,7 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'http://103.55.36.167',
+	'hostname' => '103.55.36.167',
 	'username' => 'journalui',
 	'password' => 'adminjournalui',
 	'database' => 'journal',
