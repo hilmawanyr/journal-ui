@@ -8,7 +8,7 @@ class Search extends CI_Controller {
 		parent::__construct();
 		$this->load->library('pagination');
 		$this->load->library('ConvertResponse', NULL, 'cr');
-		$this->load->driver('cache', ['adapter' => 'apc', 'backup' => 'file']);
+		$this->load->driver('cache', ['adapter' => 'memcached', 'backup' => 'file']);
 
 		$this->load->library('encryption');
 		$key = $this->encryption->create_key(16);
@@ -34,11 +34,11 @@ class Search extends CI_Controller {
 		// check whether article was exist in cache
 		if (!$this->cache->get($encodeURL)) {
 			$fetch_data = $this->_used_host($keyword, $page);
-			$this->cache->save($encodeURL, $fetch_data, 300);
+			$this->cache->memcached->save($encodeURL, $fetch_data, 300);
 		}
 
-		$data['list']  = $this->cache->get($encodeURL)[0];
-		$data['total'] = $this->cache->get($encodeURL)[1];
+		$data['list']  = $this->cache->memcached->get($encodeURL)[0];
+		$data['total'] = $this->cache->memcached->get($encodeURL)[1];
 		$data['page']  = 'result_v';
 		$is_first_page = $page === 0 ? 0 : 1;
 		$this->_pagination($data['total'], $is_first_page);

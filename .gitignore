@@ -3,3 +3,4 @@ application/cache/*
 vendor/*
 application/logs/*
 !application/logs/index.html
+application/config/constants.php
