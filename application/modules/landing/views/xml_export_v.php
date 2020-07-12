@@ -104,7 +104,7 @@
 		}
 
 		if (!empty($data['abstract'])) {
-			$abstract_node = $dom->createElement('Abstract', htmlentities($data['abstract']));
+			$abstract_node = $dom->createElement('Abstract', htmlspecialchars($data['abstract']));
 			$root->appendChild($abstract_node);
 		}
 

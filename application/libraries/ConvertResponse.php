@@ -149,7 +149,9 @@ class ConvertResponse
 								? $this->_resolve_pmc_url($data->{'0'}->fullTextUrlList->fullTextUrl) 
 								: '';
 		$response['publisher'] = '';
-		$response['issue'] = isset($data->{'0'}->journalInfo) ? $data->{'0'}->journalInfo->issue : '';
+		$response['issue'] = isset($data->{'0'}->journalInfo) 
+								? (isset($data->{'0'}->journalInfo->issue) ? $data->{'0'}->journalInfo->issue : '') 
+								: '';
 		$response['license'] = isset($data->{'0'}->license) ? $data->{'0'}->license : '';
 		$response['prefix'] = '';
 		$response['volume'] = isset($data->{'0'}->journalInfo) ? $data->{'0'}->journalInfo->volume : '';
