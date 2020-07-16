@@ -179,7 +179,7 @@
 							<div class="form-group">
 								<label for="from" class="col-form-label col-sm-2">From</label>
 								<div class="col-sm-10">
-									<input type="text" value="" class="form-control" id="from" required="">
+									<input type="text" value="" class="form-control" name="from" id="from" required="">
 								</div>
 							</div>
 							<div class="form-group">

@@ -404,7 +404,7 @@ class ConvertResponse
 	{
 		$arr = [];
 		foreach ($authors as $author => $value) {
-			$_author = $value->fullName;
+			$_author = isset($value->fullName) ? $value->fullName : '';
 			$email = isset($value->authorAffiliationsList) 
 						? $this->_handle_get_email_pmc($value->authorAffiliationsList->authorAffiliation)
 						: '';

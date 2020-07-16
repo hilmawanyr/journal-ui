@@ -13,8 +13,8 @@
             <thead>
               <tr>
                 <th>No</th>
-                <th>DOI</th>
-                <th>Title</th>
+                <th>Recipient</th>
+                <th>Subject</th>
                 <th>Date</th>
               </tr>
             </thead>
@@ -22,8 +22,8 @@
               <?php $no=1; foreach ($data as $inv) : ?>
                 <tr>
                   <td><?= $no; ?></td>
-                  <td><?= $inv->doi; ?></td>
-                  <td><?= $inv->title; ?></td>
+                  <td><?= $inv->recipient; ?></td>
+                  <td><?= $inv->subject; ?></td>
                   <td><?= $inv->created_at ?></td>
                 </tr>
               <?php $no++; endforeach; ?>

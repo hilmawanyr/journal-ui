@@ -77,6 +77,7 @@ class Mail extends CI_Controller{
     }
 
     $send = $this->_send([
+      'from' => $this->session->userdata('login_sess')['email'],
       'recipient' => $splitRecipient,
       'cc'        => isset($splitCC) ? $splitCC : '',
       'subject'   => $subject,
@@ -114,7 +115,7 @@ class Mail extends CI_Controller{
 
     $this->load->library('email', $config);
     $this->email->set_newline("\r\n");
-    $this->email->from('hilmawan@ubharajaya.ac.id', 'Hilmawan Yusuf Rukmana');
+    $this->email->from($mail['from'], 'no-name');
     $this->email->to($mail['recipient']);
     !empty($mail['cc']) ? $this->email->cc($mail['cc']) : '';
     $this->email->subject($mail['subject']);
@@ -135,15 +136,16 @@ class Mail extends CI_Controller{
     extract(PopulateForm());
 
     $send = $this->_send([
+      'from' => $from,
       'recipient' => $recipient,
       'subject'   => $subject,
       'message'   => $message
     ]);
 
     $data = [
-      'doi' => $doi,
-      'title' => $title,
-      'owner' => $this->userid
+      'recipient' => $recipient,
+      'subject' => $subject,
+      'sender' => $this->userid
     ];
 
     $this->db->insert('invited', $data);
