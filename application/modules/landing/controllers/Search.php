@@ -164,8 +164,10 @@ class Search extends CI_Controller {
 	 */
 	public function modal_detail(string $doi) : void
 	{
-		$decodeDOI = urldecode($doi);
-		$fixDOI = str_replace('$', '.', $decodeDOI);
+		// $decodeDOI = urldecode($doi);
+		$search = [':::', ':', '::'];
+		$replace = ['.', '/', '-'];
+		$fixDOI = str_replace($search, $replace, $doi);
 		switch ($this->session->userdata('HOST')) {
 			case 'CRF':
 				$this->_crf_modal_detail($fixDOI);
@@ -210,7 +212,9 @@ class Search extends CI_Controller {
 	 */
 	public function export_xml(string $doi) : void
 	{
-		$_DOI = str_replace('$', '.', urldecode($doi));
+		$search = [':::', ':', '::'];
+		$replace = ['.', '/', '-'];
+		$_DOI = str_replace($search, $replace, $doi);
 		switch ($this->session->userdata('HOST')) {
 			case 'CRF':
 				$this->_crf_xml_export($_DOI);
@@ -291,7 +295,9 @@ class Search extends CI_Controller {
 	 */
 	public function export_csv(string $doi) : void
 	{
-		$_DOI = str_replace('$', '.', urldecode($doi));
+		$search = [':::', ':', '::'];
+		$replace = ['.', '/', '-'];
+		$_DOI = str_replace($search, $replace, $doi);
 		switch ($this->session->userdata('HOST')) {
 			case 'CRF':
 				$this->_crf_csv_export($_DOI);

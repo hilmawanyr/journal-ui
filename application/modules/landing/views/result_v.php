@@ -114,7 +114,11 @@
 								<span class="caret"></span>
 								<span class="sr-only">Toggle Dropdown</span>
 							</button>
-							<?php $encode_doi = str_replace('.','%24',urlencode($item['doi'])); ?>
+							<?php 
+								$search = ['.', '/', '-'];
+								$replace = [':::', ':', '::'];
+								$encode_doi = str_replace($search,$replace,$item['doi']); 
+							?>
 							<ul class="dropdown-menu" role="menu">
 								<li>
 									<a
