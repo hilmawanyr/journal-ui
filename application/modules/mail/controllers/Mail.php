@@ -78,7 +78,7 @@ class Mail extends CI_Controller{
 
     $send = $this->_send([
       'recipient' => $splitRecipient,
-      'cc'        => isset($populateCCs) ? $populateCCs : '',
+      'cc'        => isset($splitCC) ? $splitCC : '',
       'subject'   => $subject,
       'message'   => $message,
       'attach'    => isset($attachment) ? $populateAttachment : ''
@@ -87,7 +87,7 @@ class Mail extends CI_Controller{
     $this->_save_message([
       '_key' => md5(date('YmdHis').$this->userid),
       'recipient' => serialize($splitRecipient),
-      'cc' => serialize($splitCC),
+      'cc' => isset($splitCC) ? serialize($splitCC) : '',
       'subject' => $subject,
       'sender' => $this->userid,
       'is_sent' => $send ? 1 : 0,
@@ -128,6 +128,27 @@ class Mail extends CI_Controller{
   {
     $this->db->insert('message', $msg);
     return $this->db->affected_rows() ? TRUE : FALSE;
+  }
+
+  public function invite()
+  {
+    extract(PopulateForm());
+
+    $send = $this->_send([
+      'recipient' => $recipient,
+      'subject'   => $subject,
+      'message'   => $message
+    ]);
+
+    $data = [
+      'doi' => $doi,
+      'title' => $title,
+      'owner' => $this->userid
+    ];
+
+    $this->db->insert('invited', $data);
+    $this->session->set_flashdata('message_sent', 'Invitation sent!');  
+    redirect('mail','refresh');
   }
 
 }

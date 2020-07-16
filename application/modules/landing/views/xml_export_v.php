@@ -23,6 +23,17 @@
 		$type_node = $dom->createElement('Type', $data['type']);
 		$root->appendChild($type_node);
 
+		if (!empty($data['author'])) {
+			$author_node = $dom->createElement('AuthorList');
+
+			foreach ($data['author'] as $key => $author) {
+				$author_name = $dom->createElement('Author', $author['name']);
+				$author_node->appendChild($author_name);
+			}
+
+			$root->appendChild($author_node);
+		}
+
 		if (!empty($data['issn'])) {
 			$issn_node = $dom->createElement('ISSN', $data['issn']);
 			$root->appendChild($issn_node);

@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'landing';
-$route['404_override'] = 'template/not_found';
+$route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['search'] = 'landing/search/query';
@@ -63,7 +63,11 @@ $route['template-list'] = 'mail/template_list';
 $route['get-template/(:any)'] = 'mail/get_detail_template/$1';
 
 $route['xml_export/(:any)'] = 'landing/search/export_xml/$1';
+$route['csv_export/(:any)'] = 'landing/search/export_csv/$1';
 
 $route['auth'] = 'auth';
 $route['attemp-login'] = 'auth/attemp_login';
 $route['logout'] = 'auth/logout';
+
+$route['invite'] = 'mail/invite';
+$route['invitation'] = 'invite';

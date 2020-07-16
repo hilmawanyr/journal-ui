@@ -233,7 +233,11 @@ class Search extends CI_Controller {
 	 */
 	private function _crf_xml_export(string $doi) : void
 	{
-		$data['data'] = $this->_crf_get_detail($doi);
+		$host   = CRF_HOST.'works/'.urlencode($doi);
+		$header = CRF_TOKEN;
+		$exec   = $this->curl->exec($host, $header);
+		$result = json_decode($exec);
+		$data['data'] = $this->cr->convert_xml('CRF',$result->message);
 		$this->load->view('xml_export_v', $data);
 	}
 
@@ -244,7 +248,10 @@ class Search extends CI_Controller {
 	 */
 	private function _pmc_xml_export(string $doi) : void
 	{
-		$data['data'] = $this->_pmc_get_detail($doi);
+		$host   = PMC_HOST.'search?query='.urlencode($doi).'&resultType=core&format=json';
+		$exec   = $this->curl->exec($host);
+		$result = json_decode($exec);
+		$data['data'] = $this->cr->convert_xml('PMC',(object)$result->resultList->result);
 		$this->load->view('xml_export_v', $data);
 	}
 
@@ -275,6 +282,93 @@ class Search extends CI_Controller {
 		$result = json_decode($exec);
 		$data 	= $this->cr->convert_detail('PMC',(object)$result->resultList->result);
 		return $data;	
+	}
+
+	/**
+	 * Export to csv
+	 * 
+	 * @return void
+	 */
+	public function export_csv(string $doi) : void
+	{
+		$_DOI = str_replace('$', '.', urldecode($doi));
+		switch ($this->session->userdata('HOST')) {
+			case 'CRF':
+				$this->_crf_csv_export($_DOI);
+				break;
+			
+			case 'PMC':
+				$this->_pmc_csv_export($_DOI);
+				break;
+
+			default:
+				return;
+				break;
+		}		
+	}
+
+	/**
+	 * Export data to csv from Crossref
+	 * 
+	 * @param string $doi
+	 * @return void
+	 */
+	protected function _crf_csv_export(string $doi) : void
+	{
+		$host   = CRF_HOST.'works/'.urlencode($doi);
+		$header = CRF_TOKEN;
+		$exec   = $this->curl->exec($host, $header);
+		$result = json_decode($exec);
+		$data 	= $this->cr->convert_csv('CRF',$result->message);
+
+		$this->_to_csv($data);
+	}
+
+	/**
+	 * Export to csv for EuropePMC
+	 * 
+	 * @param string $doi
+	 * @return void
+	 */
+	protected function _pmc_csv_export(string $doi) : void
+	{
+		$host   = PMC_HOST.'search?query='.urlencode($doi).'&resultType=core&format=json';
+		$exec   = $this->curl->exec($host);
+		$result = json_decode($exec);
+		$data 	= $this->cr->convert_csv('PMC',(object)$result->resultList->result);
+
+		$this->_to_csv($data);
+	}
+
+	/**
+	 * Force download csv file
+	 * 
+	 * @param array $data
+	 * @return void
+	 */
+	protected function _to_csv(array $data) : void
+	{
+		header('Content-Type: application/csv');
+		header('Content-Disposition: attachment; filename="export.csv";');
+		$fp = fopen('php://output', 'w');
+		
+		$arr = [];
+		foreach ($data as $key => $value) {
+			$header[] = strtoupper($key);
+		}
+
+		foreach ($data as $key => $value) {
+			$content[] = $value;
+		}
+
+		array_push($arr, $header);
+		array_push($arr, $content);
+
+		foreach ($arr as $datas) {
+			fputcsv($fp, $datas);
+		}
+
+		fclose($fp);
 	}
 
 	/**

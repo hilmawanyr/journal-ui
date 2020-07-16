@@ -85,6 +85,11 @@
                   <i class="fa fa-envelope-o"></i>
                 </a>
               </li>
+              <li>
+                <a href="<?= base_url('invitation') ?>">
+                  <i class="fa fa-user-plus"></i>
+                </a>
+              </li>
             <?php endif; ?>
 
             <!-- User Account Menu -->

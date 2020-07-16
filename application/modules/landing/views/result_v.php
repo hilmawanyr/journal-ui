@@ -74,6 +74,9 @@
 							<p class="mb-0 text-muted">
 								<?= ucwords(str_replace('-', ' ', $item['type'])) ?>
 							</p>
+							<p class="mb-0" style="font-size: 14px">DOI:
+								<?= $item['doi'] ?>
+							</p>
 							<p class="mb-0" style="font-size: 14px">Authors:
 								<?= $item['author'] ?>
 							</p>
@@ -101,17 +104,6 @@
 							<i class="fa fa-plus" id="invite-icon"></i> Add to export list
 						</button>
 
-						<?php if ($this->session->userdata('login_sess')) : ?>
-							<button
-								type="button"
-								data-target="#inviteModal"
-								data-toggle="modal"
-								onclick="invite('<?= $item['title'] ?>')"
-								class="btn btn-warning">
-								<i class="fa fa-user-plus"></i> Invite
-							</button>
-						<?php endif; ?>
-						
 						<div class="btn-group">
 							<button type="button" class="btn btn-warning">Action</button>
 							<button
@@ -134,6 +126,7 @@
 								</li>
 								<li>
 									<a href="<?= base_url('xml_export/'.$encode_doi) ?>" target="_blank">Export XML</a>
+									<a href="<?= base_url('csv_export/'.$encode_doi) ?>" target="_blank">Export CSV</a>
 								</li>
 							</ul>
 						</div>
@@ -175,20 +168,20 @@
 				</button>
 				<h5 class="modal-title">Invite</h5>
 			</div>
-			<form action="<?= base_url('send-mail') ?>" method="post" class="form-horizontal">
+			<form action="<?= base_url('invite') ?>" method="post" class="form-horizontal">
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
 								<label for="from" class="col-form-label col-sm-2">From</label>
 								<div class="col-sm-10">
-									<input type="text" value="<?= $this->session->userdata('login_sess')['email']; ?>" class="form-control" id="from" readonly="" required="">
+									<input type="text" value="" class="form-control" id="from" required="">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="to" class="col-form-label col-sm-2">To</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" name="recipient" id="to" required="">
+									<input type="text" class="form-control" name="recipient" id="to" readonly="" required="">
 								</div>
 							</div>
 							<div class="form-group">
@@ -212,7 +205,7 @@
 
 <script>
 	function invite(arg) {
-		$('#summernote').summernote('code', arg)
+		$('#to').val(arg);
 	}
 
 	$(document).ready(function() {
