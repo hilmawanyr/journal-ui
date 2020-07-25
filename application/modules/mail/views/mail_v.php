@@ -10,17 +10,24 @@
           <strong>Well done!</strong> <?= $this->session->flashdata('message_sent'); ?>
         </div>
       <?php endif; ?>
-      <div class="box box-warning">
+      <div class="box box-primary">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-envelope"></i> Create E-mail</h3>
         </div>
         <div class="box-body">
-          <form action="<?= base_url('send-mail') ?>" method="post" enctype="multipart/form-data">
+          <form action="<?= base_url('send_mail') ?>" method="post" enctype="multipart/form-data">
             <div class="card-body">
               <div class="form-group row">
                 <label for="recipient" class="col-sm-2 col-form-label">To</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" name="recipient" data-role="tagsinput" id="recipient" required="">
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    name="recipient" 
+                    data-role="tagsinput" 
+                    value="<?= $recipient ?>" 
+                    id="recipient" 
+                    required="">
                 </div>
               </div>
               <div class="form-group row">
@@ -36,24 +43,9 @@
                 </div>
               </div>
               <textarea id="summernote" name="message" required=""></textarea>
-              <button class="btn btn-warning pull-right"><i class="fa fa-paper-plane"></i> Send E-mail</button>
+              <button class="btn btn-primary pull-right"><i class="fa fa-paper-plane"></i> Send E-mail</button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 col-xs-12">
-      <div class="box box-warning">
-        <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-paper-plane"></i> Sent E-mail List</h3>
-          <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-            </button>
-          </div>
-        </div>
-        <div class="box-body">
-          The body of the box
         </div>
       </div>
     </div>
@@ -65,7 +57,7 @@
           <strong>Well done!</strong> <?= $this->session->flashdata('success_template'); ?>
         </div>
       <?php endif; ?>
-      <div class="box box-warning">
+      <div class="box box-primary">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-bars"></i> Template List</h3>
           <div class="box-tools pull-right">
@@ -94,12 +86,12 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?= base_url('save-template') ?>" method="post">
+      <form action="<?= base_url('save_template') ?>" method="post">
         <div class="modal-body">
-          <textarea name="template" id="template" class="form-control" cols="30" rows="10"></textarea>
+          <textarea id="summernote" name="template" required=""></textarea>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-warning">Save</button>
+          <button type="submit" class="btn btn-primary">Save</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </form>
@@ -111,7 +103,7 @@
 <script type="text/javascript">
 
   function pinToMail(key) {
-    $.get('<?= base_url('get-template/') ?>' + key, function(res) {
+    $.get('<?= base_url('get_template/') ?>' + key, function(res) {
       $('#summernote').summernote('code', res);
     });
   }
@@ -120,7 +112,7 @@
 
   $(document).ready(function() {
     // summernote plugin
-    $('#summernote').summernote({
+    $('#summernote, #summernote1').summernote({
       value: 'lalala',
       height: 180,
       toolbar: [
@@ -135,7 +127,7 @@
     });
 
     // load template list
-    $.get('<?= base_url('template-list') ?>', function(res) {
+    $.get('<?= base_url('template_list') ?>', function(res) {
       var data = JSON.parse(res);
       data.forEach(function(datas) {
         $('#template-list').append(`

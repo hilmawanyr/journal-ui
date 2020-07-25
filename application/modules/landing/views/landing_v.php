@@ -25,7 +25,6 @@
 								<option disabled="" selected="" value="">Select source</option>
 								<option value="CRF">Crossref</option>
 								<option value="PMC">EuropePMC</option>
-								<option value="ELS">Elsevier</option>
 							</select>
 						</div>
 						<div class="input-group input-group-lg">
@@ -36,7 +35,7 @@
 								placeholder="Enter keyword"
 								required="" />
 				          	<span class="input-group-btn">
-				            	<button type="submit" class="btn btn-warning btn-flat">
+				            	<button type="submit" class="btn btn-primary btn-flat">
 									<i class="fa fa-search"></i>
 								</button>
 				          	</span>

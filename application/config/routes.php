@@ -54,20 +54,24 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['search'] = 'landing/search/query';
-$route['article/detail/(:any)'] = 'landing/search/modal_detail/$1';
+$route['article/(:any)/detail'] = 'landing/search/modal_detail/$1';
+$route['filter_search'] = 'landing/search/fiter_query';
 
-$route['mail'] = 'mail';
-$route['send-mail'] = 'mail/send';
-$route['save-template'] = 'mail/save_template';
-$route['template-list'] = 'mail/template_list';
-$route['get-template/(:any)'] = 'mail/get_detail_template/$1';
+$route['mail/(:any)'] = 'mail/$1';
+$route['send_mail'] = 'mail/send';
+$route['save_template'] = 'mail/save_template';
+$route['template_list'] = 'mail/template_list';
+$route['get_template/(:any)'] = 'mail/get_detail_template/$1';
 
-$route['xml_export/(:any)'] = 'landing/search/export_xml/$1';
-$route['csv_export/(:any)'] = 'landing/search/export_csv/$1';
+$route['xml_export/(:any)'] = 'landing/export/export_xml/$1';
+$route['csv_export/(:any)'] = 'landing/export/export_csv/$1';
+$route['export_all_xml/(:any)'] = 'landing/export/export_all_xml/$1';
+$route['export_all_csv/(:any)'] = 'landing/export/export_all_csv/$1';
 
 $route['auth'] = 'auth';
-$route['attemp-login'] = 'auth/attemp_login';
+$route['attemp_login'] = 'auth/attemp_login';
 $route['logout'] = 'auth/logout';
+$route['redirect_auth/(:any)'] = 'auth/redirect_auth/$1';
 
 $route['invite'] = 'mail/invite';
 $route['invitation'] = 'invite';

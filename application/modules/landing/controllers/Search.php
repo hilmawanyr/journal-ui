@@ -9,10 +9,6 @@ class Search extends CI_Controller {
 		$this->load->library('pagination');
 		$this->load->library('ConvertResponse', NULL, 'cr');
 		$this->load->driver('cache', ['adapter' => 'memcached', 'backup' => 'file']);
-
-		$this->load->library('encryption');
-		$key = $this->encryption->create_key(16);
-		$this->encryption->initialize(['key' => $key]);
 	}
 
 	/**
@@ -23,9 +19,9 @@ class Search extends CI_Controller {
 	public function query() : void
 	{
 		$this->_query_validation();
-		$host = $this->input->get('source');
-		$keyword = $this->input->get('keyword');
-		$page = !is_null($this->input->get('page')) ? $this->input->get('page') : 0;
+		$host      = $this->input->get('source');
+		$keyword   = $this->input->get('keyword');
+		$page      = !is_null($this->input->get('page')) ? $this->input->get('page') : 0;
 		$encodeURL = urlencode($host.$keyword.$page);
 
 		// set used source host
@@ -37,12 +33,59 @@ class Search extends CI_Controller {
 			$this->cache->memcached->save($encodeURL, $fetch_data, 300);
 		}
 
+		$data['subjects'] = $this->_subjects();
+		$data['types'] = ($this->session->userdata('HOST') == 'CRF') ? $this->_crf_type() : $this->_pmc_type();
 		$data['list']  = $this->cache->memcached->get($encodeURL)[0];
 		$data['total'] = $this->cache->memcached->get($encodeURL)[1];
 		$data['page']  = 'result_v';
 		$is_first_page = $page === 0 ? 0 : 1;
-		$this->_pagination($data['total'], $is_first_page);
+		$baseURL = base_url().'search?';
+		$this->_pagination($baseURL, $data['total'], $is_first_page);
 		$this->load->view('template/template', $data);
+	}
+
+	/**
+	 * Subjects list
+	 * 
+	 * @return array
+	 */
+	protected function _subjects() : array
+	{
+		$subjects = $this->db->get_where('subjects', ['deleted_at IS NULL' => NULL])->result();
+		return $subjects;
+	}
+	
+
+	/**
+	 * Crossref filter for Type
+	 * 
+	 * @return array
+	 */
+	protected function _crf_type() : array
+	{
+		$host = CRF_HOST.'types';
+		$header = [CRF_TOKEN];
+		$exec = $this->curl->exec($host, $header);
+		$response = json_decode($exec);
+		$result = $response->message->items;
+		return $result;	
+	}
+
+	/**
+	 * Europe PMC filter for Type
+	 * 
+	 * @return array
+	 */
+	protected function _pmc_type() : array
+	{
+		$types = $this->db->get('pmc_pubtype')->result();
+		foreach ($types as $val) {
+			$_types[] = (object) [
+				'id' => $val->value,
+				'label' => $val->label
+			];
+		}
+		return $_types;
 	}
 
 	/**
@@ -53,12 +96,12 @@ class Search extends CI_Controller {
 	protected function _query_validation() : void
 	{
 		if (!$this->input->get('keyword')) {
-			$this->session->set_flashdata('unvalid_search', 'Unvalid query string');
+			$this->session->set_flashdata('unvalid_search', 'Invalid query string');
 			redirect('/','refresh');
 		}
 
 		if (!$this->input->get('source')) {
-			$this->session->set_flashdata('unvalid_search', 'Unvalid query string');
+			$this->session->set_flashdata('unvalid_search', 'Invalid query string');
 			redirect('/','refresh');
 		}
 
@@ -67,7 +110,8 @@ class Search extends CI_Controller {
 
 	/**
 	 * Set session for used host
-	 * @param string 	$host
+	 *
+	 * @param string $host
 	 * @return void
 	 */
 	private function _set_host(string $host) : void
@@ -78,6 +122,7 @@ class Search extends CI_Controller {
 
 	/**
 	 * Get data search result from used host
+	 *
 	 * @param string 	$query (query string for searching)
 	 * @param int 		$offset (start row from search result)
 	 * @return array
@@ -100,6 +145,102 @@ class Search extends CI_Controller {
 	}
 
 	/**
+	 * Get data by filtered value form result page
+	 * 
+	 * @return void
+	 */	
+	public function fiter_query() : void
+	{
+		$host      = $this->session->userdata('HOST');
+		$keyword   = $this->input->get('keyword');
+		$filter    = $this->input->get('filter');
+		$offset    = !is_null($this->input->get('page')) ? $this->input->get('page') : 0;
+		$encodeURL = urlencode($host.$keyword.$filter.$offset);
+		
+		$data['types'] = ($host == 'CRF') ? $this->_crf_type() : $this->_pmc_type();
+
+		if (!$this->cache->memcached->get($encodeURL)) {
+			$fetch_data = ($host == 'CRF') 
+							? $this->_filter_q_crf($keyword, $filter, $offset) 
+							: $this->_filter_q_pmc($keyword, $filter, $offset);
+			$this->cache->memcached->save($encodeURL, $fetch_data, 300);
+		}
+
+		$data['subjects'] = $this->_subjects();
+		$data['list']  = $this->cache->memcached->get($encodeURL)[0];
+		$data['total'] = $this->cache->memcached->get($encodeURL)[1];
+		$data['page']  = 'result_v';
+		$is_first_page = $offset === 0 ? 0 : 1;
+		$baseURL = base_url().'filter_search?';
+		$this->_pagination($baseURL, $data['total'], $is_first_page);
+		$this->load->view('template/template', $data);
+	}
+
+	/**
+	 * Hit endpoint for get data from Crossref by filtered search
+	 * 
+	 * @param string $keyword
+	 * @param string $filter
+	 * @param int 	 $offset
+	 * @return void
+	 */
+	protected function _filter_q_crf(string $keyword, string $filter, int $offset)
+	{
+		$endpoint = CRF_HOST.'works?query='.urlencode($keyword).'&filter=type:'.urlencode($filter).'&rows=10&offset='.$offset;
+		$header = [CRF_TOKEN];
+		$exec = $this->curl->exec($endpoint, $header);
+		$response = json_decode($exec);
+		$res_number = $response->message->{'total-results'};
+		$data = $this->cr->convert('CRF', $response->message->items);
+		return [$data, $res_number];
+	}
+
+	/**
+	 * Get filtered data from EuropePMC
+	 * 
+	 * @param string $keyword
+	 * @param string $filter
+	 * @param int 	 $offset
+	 * @return void
+	 */
+	protected function _filter_q_pmc(string $keyword, string $filter, int $offset=0)
+	{
+		$cm = $offset == 0 ? '*' : '';
+
+		if (!$this->session->userdata('cm')) {
+			$this->session->set_userdata('cm', []);
+		}
+
+		if ($offset != 0 && $this->session->userdata('cm')) {
+			$cm = array_search('next', $this->session->userdata('cm'));
+		}
+
+		$host = PMC_HOST.'search?query='.urlencode($keyword).'%20PUB_TYPE:'.urlencode($filter);
+		$host .= '&pageSize=10&resultType=core&format=json&cursorMark='.$cm;
+
+		$exec = $this->curl->exec($host);
+		$response = json_decode($exec);
+
+		$new_cm = array_merge($this->session->userdata('cm'), 
+			[
+				$response->request->cursorMark => (string)$offset, 
+				$response->nextCursorMark => 'next'
+			]);
+
+		$this->session->set_userdata('cm', $new_cm);
+
+		if (count($response->resultList->result) > 0) {
+			$res_number = $response->hitCount;
+			$data = $this->cr->convert('PMC', $response->resultList->result);	
+		} else {
+			$res_number = $response->hitCount;
+			$data = [];
+		}
+		
+		return [$data, $res_number];
+	}
+
+	/**
 	 * Get 'works' data from Crosreff base on query string
 	 * @param string 	$query (query string)
 	 * @param int 		$offset (start row from search result)
@@ -113,8 +254,7 @@ class Search extends CI_Controller {
 		$host .= 'published-online,publisher-location,reference,title,link,type,';
 		$host .= 'publisher,volume,ISBN';
 
-		$header = CRF_TOKEN;
-
+		$header = [CRF_TOKEN];
 		$exec = $this->curl->exec($host, $header);
 		$response = json_decode($exec);
 		$res_number = $response->message->{'total-results'};
@@ -164,10 +304,7 @@ class Search extends CI_Controller {
 	 */
 	public function modal_detail(string $doi) : void
 	{
-		// $decodeDOI = urldecode($doi);
-		$search = [':::', ':', '::'];
-		$replace = ['.', '/', '-'];
-		$fixDOI = str_replace($search, $replace, $doi);
+		$fixDOI = str_replace('_', '=', base64_decode($doi));
 		switch ($this->session->userdata('HOST')) {
 			case 'CRF':
 				$this->_crf_modal_detail($fixDOI);
@@ -206,68 +343,15 @@ class Search extends CI_Controller {
 	}
 
 	/**
-	 * Export an article detail to XML base on its host
-	 * @param string $doi
-	 * @return void
-	 */
-	public function export_xml(string $doi) : void
-	{
-		$search = [':::', ':', '::'];
-		$replace = ['.', '/', '-'];
-		$_DOI = str_replace($search, $replace, $doi);
-		switch ($this->session->userdata('HOST')) {
-			case 'CRF':
-				$this->_crf_xml_export($_DOI);
-				break;
-
-			case 'PMC':
-				$this->_pmc_xml_export($_DOI);
-				break;
-
-			default:
-				return;
-				break;
-		}
-	}
-
-	/**
-	 * Export article detail from Crossref host to XML format
-	 * @param string $doi
-	 * @return void
-	 */
-	private function _crf_xml_export(string $doi) : void
-	{
-		$host   = CRF_HOST.'works/'.urlencode($doi);
-		$header = CRF_TOKEN;
-		$exec   = $this->curl->exec($host, $header);
-		$result = json_decode($exec);
-		$data['data'] = $this->cr->convert_xml('CRF',$result->message);
-		$this->load->view('xml_export_v', $data);
-	}
-
-	/**
-	 * Export article detail from Crossref host to XML format
-	 * @param string $doi
-	 * @return void
-	 */
-	private function _pmc_xml_export(string $doi) : void
-	{
-		$host   = PMC_HOST.'search?query='.urlencode($doi).'&resultType=core&format=json';
-		$exec   = $this->curl->exec($host);
-		$result = json_decode($exec);
-		$data['data'] = $this->cr->convert_xml('PMC',(object)$result->resultList->result);
-		$this->load->view('xml_export_v', $data);
-	}
-
-	/**
 	 * Get article detail and return it to array
 	 * @param string $doi
 	 * @return array
 	 */
 	private function _crf_get_detail(string $doi) : array
 	{
-		$host   = CRF_HOST.'works/'.urlencode($doi);
-		$header = CRF_TOKEN;
+		$_doi 	= str_replace('=', '_', $doi);
+		$host   = CRF_HOST.'works/'.urlencode($_doi);
+		$header = [CRF_TOKEN];
 		$exec   = $this->curl->exec($host, $header);
 		$result = json_decode($exec);
 		$data 	= $this->cr->convert_detail('CRF',$result->message);
@@ -281,100 +365,14 @@ class Search extends CI_Controller {
 	 */
 	protected function _pmc_get_detail(string $doi) : array
 	{
-		$host   = PMC_HOST.'search?query='.urlencode($doi).'&resultType=core&format=json';
+		$_doi 	= str_replace('=', '_', $doi);
+		$host   = PMC_HOST.'search?query='.urlencode($_doi).'&resultType=core&format=json';
 		$exec   = $this->curl->exec($host);
 		$result = json_decode($exec);
-		$data 	= $this->cr->convert_detail('PMC',(object)$result->resultList->result);
+		foreach ($result->resultList->result as $value) {
+			$data = $this->cr->convert_detail('PMC', $value);	
+		}
 		return $data;	
-	}
-
-	/**
-	 * Export to csv
-	 * 
-	 * @return void
-	 */
-	public function export_csv(string $doi) : void
-	{
-		$search = [':::', ':', '::'];
-		$replace = ['.', '/', '-'];
-		$_DOI = str_replace($search, $replace, $doi);
-		switch ($this->session->userdata('HOST')) {
-			case 'CRF':
-				$this->_crf_csv_export($_DOI);
-				break;
-			
-			case 'PMC':
-				$this->_pmc_csv_export($_DOI);
-				break;
-
-			default:
-				return;
-				break;
-		}		
-	}
-
-	/**
-	 * Export data to csv from Crossref
-	 * 
-	 * @param string $doi
-	 * @return void
-	 */
-	protected function _crf_csv_export(string $doi) : void
-	{
-		$host   = CRF_HOST.'works/'.urlencode($doi);
-		$header = CRF_TOKEN;
-		$exec   = $this->curl->exec($host, $header);
-		$result = json_decode($exec);
-		$data 	= $this->cr->convert_csv('CRF',$result->message);
-
-		$this->_to_csv($data);
-	}
-
-	/**
-	 * Export to csv for EuropePMC
-	 * 
-	 * @param string $doi
-	 * @return void
-	 */
-	protected function _pmc_csv_export(string $doi) : void
-	{
-		$host   = PMC_HOST.'search?query='.urlencode($doi).'&resultType=core&format=json';
-		$exec   = $this->curl->exec($host);
-		$result = json_decode($exec);
-		$data 	= $this->cr->convert_csv('PMC',(object)$result->resultList->result);
-
-		$this->_to_csv($data);
-	}
-
-	/**
-	 * Force download csv file
-	 * 
-	 * @param array $data
-	 * @return void
-	 */
-	protected function _to_csv(array $data) : void
-	{
-		header('Content-Type: application/csv');
-		header('Content-Disposition: attachment; filename="export.csv";');
-		$fp = fopen('php://output', 'w');
-		
-		$arr = [];
-		foreach ($data as $key => $value) {
-			$header[] = strtoupper($key);
-		}
-
-		foreach ($data as $key => $value) {
-			$content[] = $value;
-		}
-
-		array_push($arr, $header);
-		array_push($arr, $content);
-
-		foreach ($arr as $datas) {
-			fputcsv($fp, $datas);
-		}
-
-		fclose($fp);
 	}
 
 	/**
@@ -383,7 +381,7 @@ class Search extends CI_Controller {
 	 * @param int $page (page position)
 	 * @return object
 	 */
-	private function _pagination(int $total, int $page) : object
+	private function _pagination(string $baseURL, int $total, int $page) : object
 	{
 		if ($page === 0) {
 			$queryString = $_SERVER['QUERY_STRING'];
@@ -393,7 +391,7 @@ class Search extends CI_Controller {
 			$queryString = implode('&', $qs_to_array);
 		}
 
-		$config['base_url'] = base_url().'search?'.$queryString;
+		$config['base_url'] = $baseURL.$queryString;
 		$config['total_rows'] = $total;
 		$config['per_page'] = 10;
 

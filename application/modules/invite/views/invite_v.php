@@ -4,7 +4,7 @@
   <div class="row">
 
     <div class="col-md-12 col-xs-12">
-      <div class="box box-warning">
+      <div class="box box-primary">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-user-plus"></i> Invitation</h3>
         </div>
@@ -20,9 +20,19 @@
             </thead>
             <tbody>
               <?php $no=1; foreach ($data as $inv) : ?>
+                <?php 
+                  $arr = [];
+                  $exp = explode('"', $inv->recipient);
+                  foreach ($exp as $val) {
+                    if (strpos($val, '@') !== false) {
+                      array_push($arr, $val); 
+                    }     
+                  }
+                  $res = implode(', ', $arr);
+                ?>
                 <tr>
                   <td><?= $no; ?></td>
-                  <td><?= $inv->recipient; ?></td>
+                  <td><?= $res; ?></td>
                   <td><?= $inv->subject; ?></td>
                   <td><?= $inv->created_at ?></td>
                 </tr>
@@ -45,7 +55,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?= base_url('save-template') ?>" method="post">
+      <form action="<?= base_url('save_template') ?>" method="post">
         <div class="modal-body">
           <textarea name="template" id="template" class="form-control" cols="30" rows="10"></textarea>
         </div>

@@ -10,10 +10,10 @@
 		return $post;
 	}
 
-	function dd($data, $die=0)
+	function dd($data, $die=1)
 	{
 		echo "<pre>";
 		var_dump ($data);
 		echo "</pre>";
-		$die === 0 ? exit() : '';
+		$die === 1 ? exit() : '';
 	}

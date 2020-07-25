@@ -35,7 +35,7 @@ class ConvertResponse
 
 			$response[] = [
 				'title'  => $title,
-				'type'   => $value->type,
+				'type'   => isset($value->type) ? $value->type : '',
 				'author' => $authors,
 				'url'    => $value->URL,
 				'doi'    => $value->DOI
@@ -98,105 +98,19 @@ class ConvertResponse
 		return $urls;
 	}
 
-	/*============================================================
-	=            Block Section for Handle CSV Service            =
-	============================================================*/
-	
-	public function convert_csv(string $host, object $data) : array
-	{
-		switch ($host) {
-			case 'CRF':
-				return $this->_csv_crf_export($data);
-				break;
-
-			case 'PMC':
-				return $this->_csv_pmc_export($data);
-				break;
-			
-			default:
-				return [];
-				break;
-		}
-	}
-
-	protected function _csv_crf_export(object $data) : array
-	{
-		$response['title'] = $this->_resolve_title_crf($data->title);
-		$response['doi'] = isset($data->DOI) ? $data->DOI : '';
-		$response['author'] = isset($data->author) ? $this->_resolve_author_crf($data->author) : '-';
-		$response['type'] = isset($data->type) ? $data->type : '';
-		$response['issn'] = isset($data->ISSN) ? implode(', ', $data->ISSN) : '';
-		$response['isbn'] = isset($data->ISBN) ? implode(', ', $data->ISBN) : '';
-		$response['subject'] = isset($data->subject) ? implode(', ',$data->subject) : '';
-		$response['url'] = isset($data->URL) ? $data->URL : '';
-		$response['publisher'] = isset($data->publisher) ? $data->publisher : '';
-		$response['issue'] = isset($data->issue) ? $data->issue : '';
-		$response['license'] = isset($data->license) ? $data->license : '';
-		$response['prefix'] = isset($data->prefix) ? $data->prefix : '';
-		$response['volume'] = isset($data->volume) ? $data->volume : '';
-		$response['funder'] = isset($data->funder) ? $data->funder : '';
-		$response['abstract'] = isset($data->abstract) ? $data->abstract : '';
-		$response['member'] = isset($data->member) ? $data->member : '';
-		$response['publised_online'] = isset($data->{'published-online'}) 
-											? implode('-', (array)$data->{'published-online'}->{'date-parts'}[0]) 
-											: '';
-		$response['reference'] = isset($data->reference) ? $data->reference : '';
-		return $response;
-	}
-
-	protected function _csv_pmc_export(object $data) : array
-	{
-		$response['title']  = isset($data->{'0'}->title) ? $data->{'0'}->title : '';
-		$response['doi']    = isset($data->{'0'}->doi) ? $data->{'0'}->doi : '#';
-		$response['author'] = isset($data->{'0'}->authorList) 
-								? $this->_handle_author_pmc($data->{'0'}->authorList->author, 1) 
-								: '-';
-		$response['type']   = isset($data->{'0'}->pubTypeList) ? implode(', ',$data->{'0'}->pubTypeList->pubType) : '';
-		$response['issn']   = isset($data->{'0'}->journalInfo) ? $data->{'0'}->journalInfo->journal->issn : '';
-		$response['isbn']   = '';
-
-		$response['subject'] = '';
-		$response['url']     = isset($data->{'0'}->fullTextUrlList) 
-								? implode(', ', $this->_resolve_pmc_url($data->{'0'}->fullTextUrlList->fullTextUrl)) 
-								: '';
-
-		$response['publisher'] = isset($data->{'0'}->bookOrReportDetails) 
-									? $data->{'0'}->bookOrReportDetails->publisher
-									: '';
-
-		$response['issue']     = isset($data->{'0'}->journalInfo) 
-									? (isset($data->{'0'}->journalInfo->issue) ? $data->{'0'}->journalInfo->issue : '') 
-									: '';
-
-		$response['license'] = isset($data->{'0'}->license) ? $data->{'0'}->license : '';
-		$response['prefix']  = '';
-		$response['volume']  = isset($data->{'0'}->journalInfo) 
-								? (isset($data->{'0'}->journalInfo->volume) ? $data->{'0'}->journalInfo->volume : '')
-								: '';
-
-		$response['funder']          = '';
-		$response['abstract']        = isset($data->{'0'}->abstractText) ? $data->{'0'}->abstractText : '';
-		$response['member']          = '';
-		$response['publised_online'] = isset($data->{'0'}->firstPublicationDate) ? $data->{'0'}->firstPublicationDate : '';
-		$response['reference']       = '';
-		return $response;	
-	}
-
-	/*=====  End of Section comment block  ======*/
-
 	/*===========================================================================
 	=            Section for Handle Detail that Used on Modal Detail            =
 	===========================================================================*/	
 
-	public function convert_detail(string $host, object $data) : array
+	public function convert_detail(string $host, object $data, string $usedFor='default') : array
 	{
 		switch ($host) {
 			case 'CRF':
-				return $this->_cnvrt_dtl_crf($data);
+				return $this->_cnvrt_dtl_crf($data, $usedFor);
 				break;
 
 			case 'PMC':
-				return $this->_cnvrt_dtl_pmc($data);
+				return $this->_cnvrt_dtl_pmc($data, $usedFor);
 				break;
 			
 			default:
@@ -205,11 +119,18 @@ class ConvertResponse
 		}
 	}
 
-	private function _cnvrt_dtl_crf(object $data) : array
+	private function _cnvrt_dtl_crf(object $data, string $usedFor='default') : array
 	{
-		$response['title'] = $this->_resolve_title_crf($data->title);
+		$response['title'] = isset($data->title) ? $this->_resolve_title_crf($data->title) : '';
 		$response['doi'] = isset($data->DOI) ? $data->DOI : '';
-		$response['author'] = isset($data->author) ? $this->_resolve_author_crf($data->author) : '-';
+
+		if ($usedFor == 'default' OR $usedFor == 'csv') {
+			$response['author'] = isset($data->author) ? $this->_resolve_author_crf($data->author) : '-';
+			
+		} elseif ($usedFor == 'xml') {
+			$response['author'] = isset($data->author) ? $this->_crf_convert_xml_author($data->author) : '';
+		}
+
 		$response['type'] = isset($data->type) ? $data->type : '';
 		$response['issn'] = isset($data->ISSN) ? implode(', ', $data->ISSN) : '';
 		$response['isbn'] = isset($data->ISBN) ? implode(', ', $data->ISBN) : '';
@@ -217,100 +138,99 @@ class ConvertResponse
 		$response['url'] = isset($data->URL) ? $data->URL : '';
 		$response['publisher'] = isset($data->publisher) ? $data->publisher : '';
 		$response['issue'] = isset($data->issue) ? $data->issue : '';
-		$response['license'] = isset($data->license) ? $data->license : '';
+
+		if ($usedFor == 'default' OR $usedFor == 'xml') {
+			$response['license'] = isset($data->license) ? $data->license : '';
+			
+		} elseif ($usedFor == 'csv') {
+			$response['license'] = isset($data->license) 
+									? $this->_handle_license_crf_csv($data->license) 
+									: '';
+		}
+
 		$response['prefix'] = isset($data->prefix) ? $data->prefix : '';
 		$response['volume'] = isset($data->volume) ? $data->volume : '';
 		$response['funder'] = isset($data->funder) ? $data->funder : '';
 		$response['abstract'] = isset($data->abstract) ? $data->abstract : '';
 		$response['member'] = isset($data->member) ? $data->member : '';
-		$response['publised_online'] = isset($data->{'published-online'}) ? $data->{'published-online'} : '';
+
+		if ($usedFor == 'default') {
+			$response['published_online'] = isset($data->{'published-online'}) ? $data->{'published-online'} : '';
+			
+		} elseif ($usedFor == 'csv' OR $usedFor == 'xml') {
+			$response['published_online'] = isset($data->{'published-online'}) 
+											? implode('-', (array)$data->{'published-online'}->{'date-parts'}[0]) 
+											: '';
+		}
+
 		$response['reference'] = isset($data->reference) ? $data->reference : '';
 		return $response;
 	}
 
-	protected function _cnvrt_dtl_pmc(object $data) : array
+	protected function _cnvrt_dtl_pmc(object $data, string $usedFor='default') : array
 	{
-		$response['title']  = isset($data->{'0'}->title) ? $data->{'0'}->title : '';
-		$response['doi']    = isset($data->{'0'}->doi) ? $data->{'0'}->doi : '#';
-		$response['author'] = isset($data->{'0'}->authorList) 
-								? $this->_handle_author_pmc($data->{'0'}->authorList->author) 
-								: '-';
-		$response['type']   = isset($data->{'0'}->pubTypeList) ? implode(', ',$data->{'0'}->pubTypeList->pubType) : '';
-		$response['issn']   = isset($data->{'0'}->journalInfo) ? $data->{'0'}->journalInfo->journal->issn : '';
-		$response['isbn']   = '';
+		$response['title']  = isset($data->title) ? $data->title : '';
+		$response['doi']    = isset($data->doi) ? $data->doi : '#';
 
+		if ($usedFor == 'default') {
+			$response['author'] = isset($data->authorList) 
+									? $this->_handle_author_pmc($data->authorList->author) 
+									: ($usedFor == 'default' ? '-' : '');
+
+		} elseif ($usedFor == 'xml') {
+			$response['author'] = isset($data->authorList) 
+									? $this->_handle_author_pmc_xml($data->authorList->author, 1) 
+									: '-';
+			
+		} elseif ($usedFor == 'csv') {
+			$response['author'] = isset($data->authorList) 
+									? $this->_handle_author_pmc($data->authorList->author, 1) 
+									: '-';
+		}
+
+		$response['type']    = isset($data->pubTypeList) ? implode(', ',$data->pubTypeList->pubType) : '';
+		$response['issn']    = isset($data->journalInfo->journal->issn) ? $data->journalInfo->journal->issn : '';
+		$response['isbn']    = '';
 		$response['subject'] = '';
-		$response['url']     = isset($data->{'0'}->fullTextUrlList) 
-								? $this->_resolve_pmc_url($data->{'0'}->fullTextUrlList->fullTextUrl) 
+
+		if ($usedFor == 'default') {
+			$response['url'] = isset($data->fullTextUrlList) 
+								? $this->_resolve_pmc_url($data->fullTextUrlList->fullTextUrl) 
 								: '';
 
-		$response['publisher'] = isset($data->{'0'}->bookOrReportDetails) 
-									? $data->{'0'}->bookOrReportDetails->publisher
+		} elseif ($usedFor == 'csv' OR $usedFor == 'xml') {
+			$response['url'] = isset($data->fullTextUrlList) 
+								? implode(', ', $this->_resolve_pmc_url($data->fullTextUrlList->fullTextUrl)) 
+								: '';
+		}		
+
+		$response['publisher'] = isset($data->bookOrReportDetails) 
+									? $data->bookOrReportDetails->publisher
 									: '';
 
-		$response['issue']     = isset($data->{'0'}->journalInfo) 
-									? (isset($data->{'0'}->journalInfo->issue) ? $data->{'0'}->journalInfo->issue : '') 
-									: '';
+		$response['issue'] = isset($data->journalInfo) 
+								? (isset($data->journalInfo->issue) 
+									? $data->journalInfo->issue 
+									: '') 
+								: '';
 
-		$response['license'] = isset($data->{'0'}->license) ? $data->{'0'}->license : '';
+		$response['license'] = isset($data->license) ? $data->license : '';
 		$response['prefix']  = '';
-		$response['volume']  = isset($data->{'0'}->journalInfo) 
-								? (isset($data->{'0'}->journalInfo->volume) ? $data->{'0'}->journalInfo->volume : '')
+		$response['volume']  = isset($data->journalInfo) 
+								? (isset($data->journalInfo->volume) 
+									? $data->journalInfo->volume 
+									: '')
 								: '';
 
-		$response['funder']          = '';
-		$response['abstract']        = isset($data->{'0'}->abstractText) ? $data->{'0'}->abstractText : '';
-		$response['member']          = '';
-		$response['publised_online'] = isset($data->{'0'}->firstPublicationDate) ? $data->{'0'}->firstPublicationDate : '';
-		$response['reference']       = '';
+		$response['funder']    = '';
+		$response['abstract']  = isset($data->abstractText) ? $data->abstractText : '';
+		$response['member']    = '';
+		$response['reference'] = '';
+		$response['published_online'] = isset($data->firstPublicationDate) ? $data->firstPublicationDate : '';
 		return $response;	
 	}
 
 	/*=====  End of Section for Handle Detail that Used on Modal Detail  ======*/
-
-	/*===========================================================================
-	=            Section for Handle Servive that Used for XML export            =
-	===========================================================================*/
-	
-	public function convert_xml(string $host, object $data) : array
-	{
-		switch ($host) {
-			case 'CRF':
-				return $this->_crf_xml_convert($data);
-				break;
-
-			case 'PMC':
-				return $this->_pmc_xml_convert($data);
-				break;
-			
-			default:
-				return [];
-				break;
-		}
-	}
-
-	protected function _crf_xml_convert(object $data) : array
-	{
-		$response['title'] = $this->_resolve_title_crf($data->title);
-		$response['doi'] = isset($data->DOI) ? $data->DOI : '';
-		$response['author'] = isset($data->author) ? $this->_crf_convert_xml_author($data->author) : '-';
-		$response['type'] = isset($data->type) ? $data->type : '';
-		$response['issn'] = isset($data->ISSN) ? implode(', ', $data->ISSN) : '';
-		$response['isbn'] = isset($data->ISBN) ? implode(', ', $data->ISBN) : '';
-		$response['subject'] = isset($data->subject) ? implode(', ',$data->subject) : '';
-		$response['url'] = isset($data->URL) ? $data->URL : '';
-		$response['publisher'] = isset($data->publisher) ? $data->publisher : '';
-		$response['issue'] = isset($data->issue) ? $data->issue : '';
-		$response['license'] = isset($data->license) ? $data->license : '';
-		$response['prefix'] = isset($data->prefix) ? $data->prefix : '';
-		$response['volume'] = isset($data->volume) ? $data->volume : '';
-		$response['funder'] = isset($data->funder) ? $data->funder : '';
-		$response['abstract'] = isset($data->abstract) ? $data->abstract : '';
-		$response['member'] = isset($data->member) ? $data->member : '';
-		$response['publised_online'] = isset($data->{'published-online'}) ? $data->{'published-online'} : '';
-		$response['reference'] = isset($data->reference) ? $data->reference : '';
-		return $response;
-	}
 
 	protected function _crf_convert_xml_author(array $data) : array
 	{
@@ -321,43 +241,6 @@ class ConvertResponse
 			$author[] = ['name' => $given.' '.$family.' '.$orcid];
 		}
 		return $author;
-	}
-
-	protected function _pmc_xml_convert(object $data) : array
-	{
-		$response['title']  = isset($data->{'0'}->title) ? $data->{'0'}->title : '';
-		$response['doi']    = isset($data->{'0'}->doi) ? $data->{'0'}->doi : '#';
-		$response['author'] = isset($data->{'0'}->authorList) 
-								? $this->_handle_author_pmc_xml($data->{'0'}->authorList->author) 
-								: '';
-		$response['type']   = isset($data->{'0'}->pubTypeList) ? implode(', ',$data->{'0'}->pubTypeList->pubType) : '';
-		$response['issn']   = isset($data->{'0'}->journalInfo) ? $data->{'0'}->journalInfo->journal->issn : '';
-		$response['isbn']   = '';
-
-		$response['subject'] = '';
-		$response['url']     = isset($data->{'0'}->fullTextUrlList) 
-								? implode(', ', $this->_resolve_pmc_url($data->{'0'}->fullTextUrlList->fullTextUrl)) 
-								: '';
-
-		$response['publisher'] = isset($data->{'0'}->bookOrReportDetails) 
-									? $data->{'0'}->bookOrReportDetails->publisher
-									: '';
-		$response['issue']     = isset($data->{'0'}->journalInfo) 
-									? (isset($data->{'0'}->journalInfo->issue) ? $data->{'0'}->journalInfo->issue : '') 
-									: '';
-
-		$response['license'] = isset($data->{'0'}->license) ? $data->{'0'}->license : '';
-		$response['prefix']  = '';
-		$response['volume']  = isset($data->{'0'}->journalInfo) 
-								? (isset($data->{'0'}->journalInfo->volume) ? $data->{'0'}->journalInfo->volume : '')
-								: '';
-
-		$response['funder']          = '';
-		$response['abstract']        = isset($data->{'0'}->abstractText) ? $data->{'0'}->abstractText : '';
-		$response['member']          = '';
-		$response['publised_online'] = isset($data->{'0'}->firstPublicationDate) ? $data->{'0'}->firstPublicationDate : '';
-		$response['reference']       = '';
-		return $response;
 	}
 
 	protected function _handle_author_pmc_xml(array $authors) : array
@@ -414,7 +297,7 @@ class ConvertResponse
 					if ($is_for_csv == 1) {
 						$response = $_author.'['.$adjustEmail.']';
 					} else {
-						$response = '<a href="#inviteModal" data-toggle="modal" onclick="invite(\''.$adjustEmail.'\')">';
+						$response = '<a href="'.base_url('mail/'.str_replace('=', '', base64_encode($_email))).'">';
 						$response .= '<i class="fa fa-envelope"></i> '.$_author.'</a>';
 					}
 
@@ -426,6 +309,14 @@ class ConvertResponse
 		}
 		$convertResponseToString = implode(', ', $arr);
 		return $convertResponseToString;
+	}
+
+	protected function _handle_license_crf_csv(array $license) : string
+	{
+		foreach ($license as $key => $lcs) {
+			$response[] = $lcs->URL;
+		}
+		return implode(', ', $response);
 	}
 
 }

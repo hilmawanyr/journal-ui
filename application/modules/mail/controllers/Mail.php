@@ -3,31 +3,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mail extends CI_Controller{
 
-  private $userid;
+  private $userid, $username;
 
   public function __construct()
   {
     parent::__construct();
-    if (!$this->session->userdata('login_sess')) {
-      redirect('auth','refresh');
-    }
     $this->userid = $this->session->userdata('login_sess')['userid'];
+    $this->username = $this->session->userdata('login_sess')['name'];
   }
 
-  public function index()
+  public function _remap(string $method, array $param=[])
   {
-    $data['pagename'] = 'Send e-mail';
+    if (!$this->session->userdata('login_sess')) {
+      redirect('redirect_auth/'.$method);
+    }
+
+    return method_exists($this, $method)
+      ? call_user_func_array(array($this, $method), $param)
+      : call_user_func_array([$this, "index"], [$method]);
+  }
+
+  public function index(string $mail='')
+  {
+    $data['pagename']  = 'Send e-mail';
+    $data['recipient'] = ($mail !== 'index') ? base64_decode($mail) : '';
     $data['page'] = 'mail_v';
     $this->load->view('template/template', $data);
   }
 
   public function save_template()
   {
-    $template = strip_tags($this->input->post('template'));
+    $template = $this->input->post('template');
     $data = [
       '_key' => md5(date('YmdHis')),
       'template' => $template,
-      'owner' => $this->$userid
+      'owner' => $this->userid
     ];
     $this->db->insert('message_template', $data);
     $this->session->set_flashdata('success_template', 'New message template saved!');
@@ -46,7 +56,7 @@ class Mail extends CI_Controller{
     foreach ($templates as $template) {
       $template_data[] = [
         'key' => $template->_key,
-        'template' => $template->template
+        'template' => strip_tags($template->template)
       ];
     }
     echo json_encode($template_data);
@@ -115,7 +125,7 @@ class Mail extends CI_Controller{
 
     $this->load->library('email', $config);
     $this->email->set_newline("\r\n");
-    $this->email->from($mail['from'], 'no-name');
+    $this->email->from($mail['from'], $this->username);
     $this->email->to($mail['recipient']);
     !empty($mail['cc']) ? $this->email->cc($mail['cc']) : '';
     $this->email->subject($mail['subject']);

@@ -16,7 +16,7 @@ class Invite extends CI_Controller {
 
 	public function index()
 	{
-		$data['data'] = $this->db->get_where('invited', ['sender' => $this->userid])->result();
+		$data['data'] = $this->db->get_where('message', ['sender' => $this->userid])->result();
 		$data['pagename'] = 'Invitation';
 		$data['page'] = 'invite_v';
 		$this->load->view('template/template', $data);

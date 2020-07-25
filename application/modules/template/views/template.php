@@ -73,7 +73,7 @@
               <li class="dropdown notifications-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <i class="fa fa-bell-o"></i>
-                  <span class="label label-warning">10</span>
+                  <span class="label label-primary">10</span>
                 </a>
                 <ul class="dropdown-menu">
                   <li class="header">You have 10 notifications</li>
@@ -87,7 +87,7 @@
               </li>
               <li>
                 <a href="<?= base_url('invitation') ?>">
-                  <i class="fa fa-user-plus"></i>
+                  <i class="fa fa-plus-square-o"></i>
                 </a>
               </li>
             <?php endif; ?>
@@ -159,7 +159,7 @@
 <script type="text/javascript" src="<?= base_url('assets/summernote/summernote.min.js') ?>"></script>
 <script>
   $(document).ready(function() {
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({hover: "trigger"});
   });
 
   $(function () {

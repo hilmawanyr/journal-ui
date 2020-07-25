@@ -97,7 +97,25 @@
 	} ?>
 
 	<?= !empty($data['published_online'])
-			? '<tr><th>Published online date</th><td>'.implode('-',$data['published_online']->{'date-parts'}[0]).'</td></tr>'
+			? (($this->session->userdata('HOST')) == 'CRF' 
+					? '<tr><th>Published online date</th><td>'.implode('-',$data['published_online']->{'date-parts'}[0]).'</td></tr>'
+					: '<tr><th>Published online date</th><td>'.$data['published_online'].'</td></tr>')
 			: '' ?>
+
+	<?php if (!empty($data['reference'])) {
+		$_reference = '<tr><th>Reference</th><td><ul>';
+		foreach ($data['reference'] as $key => $value) {
+			// if (isset($value->unstructured)) {
+				$objvar = get_object_vars($value);
+				$key = array_keys($objvar);
+				foreach ($key as $keys => $vals) {
+					$_reference .= '<li><b>'.ucfirst(str_replace('-', ' ', $vals)).'</b>: '.$objvar[$vals].'</li>';
+				}
+				$_reference .= '<hr>';
+			// }
+		}
+		$_reference .= '</ul></td></tr>';
+		echo $_reference;
+	} ?>
 	
 </table>

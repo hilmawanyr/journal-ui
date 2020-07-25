@@ -15,7 +15,7 @@ class Curl
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $endpoint);
 		
-		!empty($header) ? curl_setopt($ch, CURLOPT_HTTPHEADER, array($header)) : '';
+		!empty($header) ? curl_setopt($ch, CURLOPT_HTTPHEADER, $header) : '';
 
 		if ($verb !== 'GET') {
 			curl_setopt($ch, CURLOPT_POST, 1);

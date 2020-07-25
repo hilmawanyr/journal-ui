@@ -11,9 +11,7 @@ class Auth extends CI_Controller {
 
 	public function index()
 	{
-		!$this->session->userdata('login_sess')
-			? $this->load->view('auth_v')
-			: redirect('/');
+		!$this->session->userdata('login_sess') ? $this->load->view('auth_v') : redirect('/');
 	}
 
 	public function attemp_login()
@@ -35,7 +33,11 @@ class Auth extends CI_Controller {
 					// create session
 					$create_sess = $this->_create_login_sess($user->userid);
 					// fly to home!
-					redirect('/','refresh');
+					if (!empty($this->input->post('has_args'))) {
+						redirect('mail/'.$this->input->post('has_args'),'refresh');
+					} else {
+						redirect('/','refresh');	
+					}
 				}
 
 				// Oops! Password is wrong ..
@@ -67,6 +69,13 @@ class Auth extends CI_Controller {
 	{
 		$this->session->sess_destroy();
 		redirect('/','refresh');
+	}
+
+	public function redirect_auth(string $data) : void
+	{
+		!$this->session->userdata('login_sess')
+			? $this->load->view('auth_v', ['email' => $data])
+			: header("location:".$_SERVER['HTTP_REFERER']);
 	}
 
 }

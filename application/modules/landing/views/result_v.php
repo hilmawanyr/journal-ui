@@ -1,142 +1,209 @@
 <section class="content">
 	<div class="row">
 		<div class="col-lg-3 col-md-3 col-xs-12">
-			<div class="box box-warning">
+			<div class="box box-primary">
 				<div class="box-body">
-					<h5 class="card-title"><i class="fa fa-filter"></i> Filter</h5>
-					<hr>
-					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Enter DOI">
-					</div>
-					<div class="form-group">
-						<select class="form-control">
-							<option selected="" disabled="">Subject</option>
-							<option value="1"></option>
-							<option value="2"></option>
-						</select>
-					</div>
-					<div class="form-group">
-						<select class="form-control">
-							<option selected="" disabled="">Article</option>
-							<option value="1"></option>
-							<option value="2"></option>
-						</select>
-					</div>
-					<div class="form-group">
-						<select class="form-control">
-							<option selected="" disabled="">Institute</option>
-							<option value="1"></option>
-							<option value="2"></option>
-						</select>
-					</div>
-					<button type="button" class="btn btn-warning">
-						<i class="fa fa-search"></i> Search
-					</button>
+					<form action="<?= base_url('filter_search') ?>" method="get">
+						<h5 class="card-title"><i class="fa fa-filter"></i> Filter</h5>
+						<hr>
+						<div class="form-group">
+							<select class="form-control" required="" name="keyword">
+								<option selected="" disabled="">Subject</option>
+								<?php foreach ($subjects as $subject) : ?>
+									<option 
+										value="<?= $subject->value ?>"
+										<?= $_GET['keyword'] == $subject->value ? 'selected=""' : ''; ?>>
+										<?= $subject->label ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="form-group">
+							<select class="form-control" name="filter" required="">
+								<option selected="" disabled="">Article</option>
+								<?php foreach ($types as $value) : ?>
+									<option 
+										value="<?= $value->id ?>"
+										<?= isset($_GET['filter'])
+												? ($_GET['filter'] == $value->id ? 'selected=""' : '')
+												: ''; ?>>
+										<?= $value->label ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<!-- <div class="form-group">
+							<select class="form-control">
+								<option selected="" disabled="">Institute</option>
+								<option value="1"></option>
+								<option value="2"></option>
+							</select>
+						</div> -->
+						<button type="submit" class="btn btn-primary">
+							<i class="fa fa-search"></i> Search
+						</button>
+					</form>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-9 col-md-9 col-xs-12">
-			<div class="box box-warning">
+			<div class="box box-primary">
 				<div class="box-body">
-					<form action="<?= base_url('search') ?>" method="get">
-						<input type="hidden" name="source" value="<?= $this->session->userdata('HOST'); ?>">
-						<div class="form-group">
-							<div class="input-group input-group-lg">
-					            <input
-									type="text"
-									name="keyword"
-									value="<?= $this->input->get('keyword') ?>"
-									class="form-control form-control-lg"
-									placeholder="Enter keyword"
-									required="" />
-					            <span class="input-group-btn">
-					              	<button type="button" class="btn btn-warning btn-flat">
-					              		<i class="fa fa-search"></i>
-					              	</button>
-					            </span>
-				            </div>
+					<div class="row">
+						<form action="<?= base_url('search') ?>" method="get" class="col-md-10">
+							<input type="hidden" name="source" value="<?= $this->session->userdata('HOST'); ?>">
+							<div class="form-group">
+								<div class="input-group input-group-lg">
+						            <input
+										type="text"
+										name="keyword"
+										value="<?= $this->input->get('keyword') ?>"
+										class="form-control form-control-lg"
+										placeholder="Enter keyword"
+										required="" />
+						            <span class="input-group-btn">
+						              	<button type="submit" class="btn btn-primary btn-flat">
+						              		<i class="fa fa-search"></i>
+						              	</button>
+						            </span>
+					            </div>
+							</div>
+						</form>
+						<div class="">
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary btn-lg">Export</button>
+								<button
+									type="button"
+									class="btn btn-primary btn-lg dropdown-toggle"
+									data-toggle="dropdown"
+									aria-expanded="false">
+									<span class="caret"></span>
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<?php 
+										$keyword = urlencode($this->input->get('keyword'));
+										$filter  = null !== $this->input->get('filter') 
+													? $this->input->get('filter') 
+													: '';
+
+										if ($this->session->userdata('HOST') == 'CRF') {
+											$offset = null !== $this->input->get('page') 
+														? $this->input->get('page') 
+														: 0;											
+										} else {
+											$page = isset($_GET['page']) ? $_GET['page'] : 0;
+											$offset = array_search($page, $this->session->userdata('cm'));
+										}
+										$param = str_replace('=', '', base64_encode($keyword.'|'.$filter.'|'.$offset));
+									 ?>
+									<li>
+										<a 
+											href="<?= base_url('export_all_xml/'.$param) ?>" 
+											target="_blank">
+											Export Result to XML
+										</a>
+										<a 
+											href="<?= base_url('export_all_csv/'.$param) ?>" 
+											target="_blank">
+											Export Result to CSV
+										</a>
+									</li>
+								</ul>
+							</div>
 						</div>
-					</form>
+					</div>
 					<div class="breadcrumb">
 						<span class="breadcrumb-item active">
 							<b>Page: <?= !is_null($this->input->get('page')) ? (($this->input->get('page')/10)+1) : 1; ?> / </b>
 						</span>
 						<span class="breadcrumb-item">Result: <?= $total ?> / </span>
-						<span class="breadcrumb-item">
+						<!-- <span class="breadcrumb-item">
 							<b>Export List: <span id="total-citation"></span></b>
-						</span>
+						</span> -->
 					</div>
+					
+					<?php if (count($list) !== 0) {
 
-					<?php foreach ($list as $item) : ?>
-						<blockquote class="blockquote">
-							<h4><?= $item['title'] ?></h4>
-							<p class="mb-0 text-muted">
-								<?= ucwords(str_replace('-', ' ', $item['type'])) ?>
-							</p>
-							<p class="mb-0" style="font-size: 14px">DOI:
-								<?= $item['doi'] ?>
-							</p>
-							<p class="mb-0" style="font-size: 14px">Authors:
-								<?= $item['author'] ?>
-							</p>
+						foreach ($list as $item) : ?>
+							<blockquote class="blockquote">
+								<?= isset($item->notFound) ? $item->notFound : '' ?>
+								<h4><?= $item['title'] ?></h4>
+								<p class="mb-0 text-muted">
+									<?= ucwords(str_replace('-', ' ', $item['type'])) ?>
+								</p>
+								<p class="mb-0" style="font-size: 14px">DOI:
+									<?= $item['doi'] ?>
+								</p>
+								<p class="mb-0" style="font-size: 14px">Authors:
+									<?= $item['author'] ?>
+								</p>
 
-							<?php if (is_array($item['url'])) : ?>
-								<?php foreach ($item['url'] as $urls) : ?>
-									<a href="<?= $urls ?>" style="font-size: 14px">
+								<?php if (is_array($item['url'])) : ?>
+									<?php foreach ($item['url'] as $urls) : ?>
+										<a href="<?= $urls ?>" style="font-size: 14px">
+											<i class="fa fa-link"></i>
+											<?= $urls ?>
+										</a>
+									<?php endforeach; ?>
+								<?php else : ?>
+									<a href="<?= $item['url'] ?>" style="font-size: 14px">
 										<i class="fa fa-link"></i>
-										<?= $urls ?>
+										<?= $item['url'] ?>
 									</a>
-								<?php endforeach; ?>
-							<?php else : ?>
-								<a href="<?= $item['url'] ?>" style="font-size: 14px">
-									<i class="fa fa-link"></i>
-									<?= $item['url'] ?>
-								</a>
-							<?php endif; ?>
-							
-						</blockquote>
-						<button
-							type="button"
-							class="btn btn-warning"
-							id="export-btn-<?= md5($item['doi']) ?>"
-							onclick="add_to_export_list('<?= $item['doi'] ?>','<?= md5($item['doi']) ?>')">
-							<i class="fa fa-plus" id="invite-icon"></i> Add to export list
-						</button>
-
-						<div class="btn-group">
-							<button type="button" class="btn btn-warning">Action</button>
+								<?php endif; ?>
+								
+							</blockquote>
+							<!-- <button
+								type="button"
+								class="btn btn-primary"
+								id="export-btn-<?= md5($item['doi']) ?>"
+								onclick="add_to_export_list('<?= $item['doi'] ?>','<?= md5($item['doi']) ?>')">
+								<i class="fa fa-plus" id="invite-icon"></i> Add to export list
+							</button> -->
+							<?php $encode_doi = str_replace('=', '', base64_encode($item['doi'])); ?>
 							<button
 								type="button"
-								class="btn btn-warning dropdown-toggle"
-								data-toggle="dropdown"
-								aria-expanded="false">
-								<span class="caret"></span>
-								<span class="sr-only">Toggle Dropdown</span>
+								class="btn btn-primary"
+								data-toggle="modal"
+								data-target="#myModal"
+								onclick="detail('<?= $encode_doi ?>')">
+								<i class="fa fa-list" id="invite-icon"></i> Detail
 							</button>
-							<?php 
-								$search = ['.', '/', '-'];
-								$replace = [':::', ':', '::'];
-								$encode_doi = str_replace($search,$replace,$item['doi']); 
-							?>
-							<ul class="dropdown-menu" role="menu">
-								<li>
-									<a
-										href="#myModal"
-										data-toggle="modal"
-								  		onclick="detail('<?= $encode_doi ?>')">
-								  	Detail
-								  </a>
-								</li>
-								<li>
-									<a href="<?= base_url('xml_export/'.$encode_doi) ?>" target="_blank">Export XML</a>
-									<a href="<?= base_url('csv_export/'.$encode_doi) ?>" target="_blank">Export CSV</a>
-								</li>
-							</ul>
-						</div>
-						<hr>
-					<?php endforeach; ?>
 
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary">Action</button>
+								<button
+									type="button"
+									class="btn btn-primary dropdown-toggle"
+									data-toggle="dropdown"
+									aria-expanded="false">
+									<span class="caret"></span>
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<!-- <li>
+										<a
+											href="#myModal"
+											data-toggle="modal"
+									  		onclick="detail('<?= $encode_doi ?>')">
+									  	Detail
+									  </a>
+									</li> -->
+									<li>
+										<a href="<?= base_url('xml_export/'.$encode_doi) ?>" target="_blank">Export XML</a>
+										<a href="<?= base_url('csv_export/'.$encode_doi) ?>" target="_blank">Export CSV</a>
+									</li>
+								</ul>
+							</div>
+							<hr>
+						<?php endforeach; 
+						
+					} else {
+						echo '<blockquote class="blockquote">No data found.</blockquote>';
+					} ?>
+					
 					<?= $this->pagination->create_links(); ?>
 				</div>
 			</div>
@@ -163,75 +230,10 @@
 	</div>
 </div>
 
-<div class="modal fade" id="inviteModal">
-	<div class="modal-dialog modal-lg" role="dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h5 class="modal-title">Invite</h5>
-			</div>
-			<form action="<?= base_url('invite') ?>" method="post" class="form-horizontal">
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="form-group">
-								<label for="from" class="col-form-label col-sm-2">From</label>
-								<div class="col-sm-10">
-									<input type="text" value="" class="form-control" name="from" id="from" required="">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="to" class="col-form-label col-sm-2">To</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control" name="recipient" id="to" readonly="" required="">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="subject" class="col-form-label col-sm-2">Subject</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control" name="subject" id="subject" required="">
-								</div>
-							</div>
-						</div>
-					</div>
-					<textarea id="summernote" name="message" required=""></textarea>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn bg-yellow"><i class="fa fa-paper-plane"></i> Send</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
 <script>
-	function invite(arg) {
-		$('#to').val(arg);
-	}
-
-	$(document).ready(function() {
-	    // summernote plugin
-	    $('#summernote').summernote({
-	      value: 'lalala',
-	      height: 180,
-	      toolbar: [
-	        ['style', ['style']],
-	        ['font', ['bold', 'underline', 'italic', 'clear']],
-	        ['color', ['color']],
-	        ['para', ['ul', 'ol', 'paragraph']],
-	        ['table', ['table']],
-	        ['insert', ['link']],
-	        ['view', ['fullscreen', 'codeview', 'help']]
-	      ]
-	    });
-	});
-
 	function detail (doi) {
 		$.ajax({
-			url: '<?= base_url('article/detail/') ?>' + doi,
+			url: '<?= base_url('article/') ?>' + doi + '/detail',
 			beforeSend: function() {
 				$('#body').html(`
 					<center>
