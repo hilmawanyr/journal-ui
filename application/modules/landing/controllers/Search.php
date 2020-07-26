@@ -186,7 +186,7 @@ class Search extends CI_Controller {
 	 */
 	protected function _filter_q_crf(string $keyword, string $filter, int $offset)
 	{
-		$endpoint = CRF_HOST.'works?query='.urlencode($keyword).'&filter=type:'.urlencode($filter).'&rows=10&offset='.$offset;
+		$endpoint = CRF_HOST.'works?query='.urlencode($keyword).'&filter=type:'.urlencode($filter).'&rows=25&offset='.$offset;
 		$header = [CRF_TOKEN];
 		$exec = $this->curl->exec($endpoint, $header);
 		$response = json_decode($exec);
@@ -216,7 +216,7 @@ class Search extends CI_Controller {
 		}
 
 		$host = PMC_HOST.'search?query='.urlencode($keyword).'%20PUB_TYPE:'.urlencode($filter);
-		$host .= '&pageSize=10&resultType=core&format=json&cursorMark='.$cm;
+		$host .= '&pageSize=25&resultType=core&format=json&cursorMark='.$cm;
 
 		$exec = $this->curl->exec($host);
 		$response = json_decode($exec);
@@ -248,7 +248,7 @@ class Search extends CI_Controller {
 	 */
 	private function _get_works_crf(string $query, int $offset=0) : array
 	{
-		$host = CRF_HOST.'works?query='.urlencode($query).'&rows=10&offset='.$offset;
+		$host = CRF_HOST.'works?query='.urlencode($query).'&rows=25&offset='.$offset;
 		$host .= '&select=abstract,URL,member,posted,created,license,ISSN,issue,';
 		$host .= 'prefix,author,DOI,funder,archive,subject,subtitle,';
 		$host .= 'published-online,publisher-location,reference,title,link,type,';
@@ -280,7 +280,7 @@ class Search extends CI_Controller {
 			$cm = array_search('next', $this->session->userdata('cm'));
 		}
 
-		$host = PMC_HOST.'search?query='.urlencode($query).'&pageSize=10&resultType=core&format=json&cursorMark='.$cm;
+		$host = PMC_HOST.'search?query='.urlencode($query).'&pageSize=25&resultType=core&format=json&cursorMark='.$cm;
 		$exec = $this->curl->exec($host);
 		$response = json_decode($exec);
 
@@ -393,7 +393,7 @@ class Search extends CI_Controller {
 
 		$config['base_url'] = $baseURL.$queryString;
 		$config['total_rows'] = $total;
-		$config['per_page'] = 10;
+		$config['per_page'] = 25;
 
 		$config['full_tag_open'] = '<div class="row"><div class="col-md-12">';
 		$config['full_tag_open'] .= '<ul class="pagination" style="margin: auto;">';

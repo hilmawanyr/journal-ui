@@ -116,7 +116,7 @@
 					</div>
 					<div class="breadcrumb">
 						<span class="breadcrumb-item active">
-							<b>Page: <?= !is_null($this->input->get('page')) ? (($this->input->get('page')/10)+1) : 1; ?> / </b>
+							<b>Page: <?= !is_null($this->input->get('page')) ? (($this->input->get('page')/25)+1) : 1; ?> / </b>
 						</span>
 						<span class="breadcrumb-item">Result: <?= $total ?> / </span>
 						<!-- <span class="breadcrumb-item">
