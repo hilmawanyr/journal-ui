@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>UI Journal</title>
+  <title>MRSD</title>
   <link rel="shortcut icon" href="<?= base_url('assets/admin-lte/img/logo.ico'); ?>"/>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -59,8 +59,8 @@
             <!-- menu list -->
               
             <li class="messages-menu">
-              <a href="#">
-                Metadata Record from Setiadi Developer
+              <a href="javascript:void(0)">
+                Metadata Record from Setiadi Developer : MRSD
               </a>
             </li>
 
