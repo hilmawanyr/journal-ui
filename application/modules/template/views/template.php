@@ -37,14 +37,16 @@
     border-color: #f0f0f0 !important;
   }
 </style>
-<body class="hold-transition skin-black-light layout-top-nav">
+<body class="hold-transition skin-blue-light layout-top-nav">
 <div class="wrapper">
 
   <header class="main-header">
     <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="<?= base_url('/') ?>" class="navbar-brand"><b>UI.</b>JOURNAL</a>
+          <a href="<?= base_url('/') ?>" class="navbar-brand">
+            <img src="<?= base_url('assets/img/logos.png') ?>" style="width: 5em" alt="">
+          </a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>
@@ -55,6 +57,12 @@
           <ul class="nav navbar-nav">
 
             <!-- menu list -->
+              
+            <li class="messages-menu">
+              <a href="#">
+                Metadata Record from Setiadi Developer
+              </a>
+            </li>
 
             <!-- end menu list -->
 
