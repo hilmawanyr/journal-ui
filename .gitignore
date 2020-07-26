@@ -4,3 +4,5 @@ vendor/*
 application/logs/*
 !application/logs/index.html
 application/config/constants.php
+application/config/development/database.php
+application/config/production/database.php
