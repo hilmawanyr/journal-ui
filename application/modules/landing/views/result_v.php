@@ -55,10 +55,15 @@
 							<input type="hidden" name="source" value="<?= $this->session->userdata('HOST'); ?>">
 							<div class="form-group">
 								<div class="input-group input-group-lg">
+									<?php if (isset($_GET['filter'])) {
+										$keyw ='';
+									} else {
+										$keyw = $this->input->get('keyword');
+									} ?>
 						            <input
 										type="text"
 										name="keyword"
-										value="<?= $this->input->get('keyword') ?>"
+										value="<?= $keyw ?>"
 										class="form-control form-control-lg"
 										placeholder="Enter keyword"
 										required="" />
@@ -118,7 +123,11 @@
 						<span class="breadcrumb-item active">
 							<b>Page: <?= !is_null($this->input->get('page')) ? (($this->input->get('page')/25)+1) : 1; ?> / </b>
 						</span>
-						<span class="breadcrumb-item">Result: <?= $total ?> / Source: <?= $this->session->userdata('HOST') == 'PMC' ? 'Europe PMC' : 'Crossref' ?></span>
+						<span class="breadcrumb-item">
+							Result: <?= $total ?> / 
+							Source: <?= $this->session->userdata('HOST') == 'PMC' ? 'Europe PMC' : 'Crossref' ?>
+							<?= isset($_GET['filter']) ? '/ search by subject: '.$_GET['keyword'] : ''; ?>
+						</span>
 						<!-- <span class="breadcrumb-item">
 							<b>Export List: <span id="total-citation"></span></b>
 						</span> -->
