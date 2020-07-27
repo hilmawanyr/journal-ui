@@ -149,7 +149,7 @@
       <div class="pull-right hidden-xs">
         <b>Version</b> 1.0.0
       </div>
-      <strong>Copyright &copy; 2020 <a href="javascript:void(0)">EDUTEKNO</a>.</strong>
+      <strong>Copyright &copy; 2020 <a href="javascript:void(0)">Setiadi Developer in Collaboration with Sekolah Ilmu Lingkungan UI</a>.</strong>
     </div>
     <!-- /.container -->
   </footer>

@@ -118,7 +118,7 @@
 						<span class="breadcrumb-item active">
 							<b>Page: <?= !is_null($this->input->get('page')) ? (($this->input->get('page')/25)+1) : 1; ?> / </b>
 						</span>
-						<span class="breadcrumb-item">Result: <?= $total ?> / </span>
+						<span class="breadcrumb-item">Result: <?= $total ?> / Source: <?= $this->session->userdata('HOST') == 'PMC' ? 'Europe PMC' : 'Crossref' ?></span>
 						<!-- <span class="breadcrumb-item">
 							<b>Export List: <span id="total-citation"></span></b>
 						</span> -->
