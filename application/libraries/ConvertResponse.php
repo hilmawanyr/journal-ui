@@ -98,10 +98,6 @@ class ConvertResponse
 		return $urls;
 	}
 
-	/*===========================================================================
-	=            Section for Handle Detail that Used on Modal Detail            =
-	===========================================================================*/	
-
 	public function convert_detail(string $host, object $data, string $usedFor='default') : array
 	{
 		switch ($host) {
@@ -123,14 +119,7 @@ class ConvertResponse
 	{
 		$response['title'] = isset($data->title) ? $this->_resolve_title_crf($data->title) : '';
 		$response['doi'] = isset($data->DOI) ? $data->DOI : '';
-
-		if ($usedFor == 'default' OR $usedFor == 'csv') {
-			$response['author'] = isset($data->author) ? $this->_resolve_author_crf($data->author) : '-';
-			
-		} elseif ($usedFor == 'xml') {
-			$response['author'] = isset($data->author) ? $this->_crf_convert_xml_author($data->author) : '';
-		}
-
+		$response['author'] = $this->_handle_author_convert('CRF', $usedFor, isset($data->author) ? $data->author : '');
 		$response['type'] = isset($data->type) ? $data->type : '';
 		$response['issn'] = isset($data->ISSN) ? implode(', ', $data->ISSN) : '';
 		$response['isbn'] = isset($data->ISBN) ? implode(', ', $data->ISBN) : '';
@@ -143,16 +132,14 @@ class ConvertResponse
 			$response['license'] = isset($data->license) ? $data->license : '';
 			
 		} elseif ($usedFor == 'csv') {
-			$response['license'] = isset($data->license) 
-									? $this->_handle_license_crf_csv($data->license) 
-									: '';
+			$response['license'] = isset($data->license) ? $this->_handle_license_crf_csv($data->license) : '';
 		}
 
-		$response['prefix'] = isset($data->prefix) ? $data->prefix : '';
-		$response['volume'] = isset($data->volume) ? $data->volume : '';
-		$response['funder'] = isset($data->funder) ? $data->funder : '';
+		$response['prefix']   = isset($data->prefix) ? $data->prefix : '';
+		$response['volume']   = isset($data->volume) ? $data->volume : '';
+		$response['funder']   = isset($data->funder) ? $data->funder : '';
 		$response['abstract'] = isset($data->abstract) ? $data->abstract : '';
-		$response['member'] = isset($data->member) ? $data->member : '';
+		$response['member']   = isset($data->member) ? $data->member : '';
 
 		if ($usedFor == 'default') {
 			$response['published_online'] = isset($data->{'published-online'}) ? $data->{'published-online'} : '';
@@ -169,25 +156,9 @@ class ConvertResponse
 
 	protected function _cnvrt_dtl_pmc(object $data, string $usedFor='default') : array
 	{
-		$response['title']  = isset($data->title) ? $data->title : '';
-		$response['doi']    = isset($data->doi) ? $data->doi : '#';
-
-		if ($usedFor == 'default') {
-			$response['author'] = isset($data->authorList) 
-									? $this->_handle_author_pmc($data->authorList->author) 
-									: ($usedFor == 'default' ? '-' : '');
-
-		} elseif ($usedFor == 'xml') {
-			$response['author'] = isset($data->authorList) 
-									? $this->_handle_author_pmc_xml($data->authorList->author, 1) 
-									: '-';
-			
-		} elseif ($usedFor == 'csv') {
-			$response['author'] = isset($data->authorList) 
-									? $this->_handle_author_pmc($data->authorList->author, 1) 
-									: '-';
-		}
-
+		$response['title']   = isset($data->title) ? $data->title : '';
+		$response['doi']     = isset($data->doi) ? $data->doi : '#';
+		$response['author']  = $this->_handle_author_convert('PMC', $usedFor, isset($data->authorList) ? $data->authorList : '');
 		$response['type']    = isset($data->pubTypeList) ? implode(', ',$data->pubTypeList->pubType) : '';
 		$response['issn']    = isset($data->journalInfo->journal->issn) ? $data->journalInfo->journal->issn : '';
 		$response['isbn']    = '';
@@ -204,24 +175,11 @@ class ConvertResponse
 								: '';
 		}		
 
-		$response['publisher'] = isset($data->bookOrReportDetails) 
-									? $data->bookOrReportDetails->publisher
-									: '';
-
-		$response['issue'] = isset($data->journalInfo) 
-								? (isset($data->journalInfo->issue) 
-									? $data->journalInfo->issue 
-									: '') 
-								: '';
-
-		$response['license'] = isset($data->license) ? $data->license : '';
-		$response['prefix']  = '';
-		$response['volume']  = isset($data->journalInfo) 
-								? (isset($data->journalInfo->volume) 
-									? $data->journalInfo->volume 
-									: '')
-								: '';
-
+		$response['publisher'] = isset($data->bookOrReportDetails) ? $data->bookOrReportDetails->publisher : '';
+		$response['issue']     = isset($data->journalInfo) ? (isset($data->journalInfo->issue) ? $data->journalInfo->issue : '') : '';
+		$response['license']   = isset($data->license) ? $data->license : '';
+		$response['prefix']    = '';
+		$response['volume']    = isset($data->journalInfo) ? (isset($data->journalInfo->volume) ? $data->journalInfo->volume : '') : '';
 		$response['funder']    = '';
 		$response['abstract']  = isset($data->abstractText) ? $data->abstractText : '';
 		$response['member']    = '';
@@ -230,7 +188,33 @@ class ConvertResponse
 		return $response;	
 	}
 
-	/*=====  End of Section for Handle Detail that Used on Modal Detail  ======*/
+	protected function _handle_author_convert(string $source, string $usedFor, $author)
+	{
+		if ($source == 'CRF') {
+
+			if ($usedFor == 'default' OR $usedFor == 'csv') {
+				$response = !empty($author) ? $this->_resolve_author_crf($author) : '-';
+				
+			} elseif ($usedFor == 'xml') {
+				$response = !empty($author) ? $this->_crf_convert_xml_author($author) : '';
+			}
+			return $response;
+			
+		} elseif ($source == 'PMC') {
+			
+			if ($usedFor == 'default') {
+				$response = !empty($author) ? $this->_handle_author_pmc($author->author) : ($usedFor == 'default' ? '-' : '');
+
+			} elseif ($usedFor == 'xml') {
+				$response = !empty($author) ? $this->_handle_author_pmc_xml($author->author, 1) : '-';
+				
+			} elseif ($usedFor == 'csv') {
+				$response = !empty($author) ? $this->_handle_author_pmc($author->author, 1) : '-';
+			}
+			return $response;
+
+		}
+	}
 
 	protected function _crf_convert_xml_author(array $data) : array
 	{
@@ -264,10 +248,7 @@ class ConvertResponse
 			}
 		}
 		return $data;
-	}
-	
-	/*=====  End of Section for Handle Servive that Used for XML export  ======*/
-	
+	}	
 
 	protected function _handle_get_email_pmc(array $data) : array
 	{
