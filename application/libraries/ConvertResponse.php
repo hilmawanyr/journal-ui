@@ -54,7 +54,7 @@ class ConvertResponse
 				$title = $title.$titl.', ';
 			}
 			$fixtitle = substr($title, 0, -2);
-		} else {
+		} else {	
 			$fixtitle = $titles[0];
 		}
 		return $fixtitle;
@@ -64,10 +64,18 @@ class ConvertResponse
 	{
 		$_authors = '';
 		foreach ($authors as $key => $author) {
-			$orcid  = isset($author->ORCID) ? ' (ORCID: '.$author->ORCID.')' : '';
+			$orcid  = isset($author->ORCID) ? str_replace('http://orcid.org/', '', $author->ORCID) : '';
+			if (!empty($orcid)) {
+				$profile = '<a href="'.base_url('profile/'.$orcid).'">';
+				$profile .= '<img src="'.base_url('assets/img/orcid-logo.png').'" width="2.5%"> Profile';
+				$profile .= '</a>';
+			} else {
+				$profile = '';
+			}
+			
 			$given  = isset($author->given) ? $author->given : '';
 			$family = isset($author->given) ? $author->family : '';
-			$_authors = $_authors.$given.' '.$family.$orcid.', ';
+			$_authors = $_authors.$given.' '.$family.$profile.', ';
 		}
 		return substr($_authors, 0, -2);
 	}
@@ -269,6 +277,7 @@ class ConvertResponse
 		$arr = [];
 		foreach ($authors as $author => $value) {
 			$_author = isset($value->fullName) ? $value->fullName : '';
+			$orcidID = isset($value->authorId) ? $this->_handle_orcid_pmc($value->authorId) : '';
 			$email = isset($value->authorAffiliationsList) 
 						? $this->_handle_get_email_pmc($value->authorAffiliationsList->authorAffiliation)
 						: '';
@@ -279,7 +288,8 @@ class ConvertResponse
 						$response = $_author.'['.$adjustEmail.']';
 					} else {
 						$response = '<a href="'.base_url('mail/'.str_replace('=', '', base64_encode($_email))).'">';
-						$response .= '<i class="fa fa-envelope"></i> '.$_author.'</a>';
+						$response .= '<i class="fa fa-envelope"></i> '.$_author.'</a> ';
+						$response .= $orcidID;
 					}
 
 					array_push($arr, $response);
@@ -290,6 +300,18 @@ class ConvertResponse
 		}
 		$convertResponseToString = implode(', ', $arr);
 		return $convertResponseToString;
+	}
+
+	protected function _handle_orcid_pmc(object $orcid) : string
+	{
+		if ($orcid->type == 'ORCID') {
+			$orc = '<a href= "'.base_url('profile/'.$orcid->value).'">';
+			$orc .= '<img src="'.base_url('assets/img/orcid-logo.png').'" width="2.5%"> Profile';
+			$orc .= '</a>';
+			return $orc;
+		} else {
+			return '';
+		}
 	}
 
 	protected function _handle_license_crf_csv(array $license) : string

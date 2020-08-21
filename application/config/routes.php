@@ -75,3 +75,5 @@ $route['redirect_auth/(:any)'] = 'auth/redirect_auth/$1';
 
 $route['invite'] = 'mail/invite';
 $route['invitation'] = 'invite';
+
+$route['profile/(:any)'] = 'profile/detail/$1';
