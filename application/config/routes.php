@@ -72,6 +72,12 @@ $route['auth'] = 'auth';
 $route['attemp_login'] = 'auth/attemp_login';
 $route['logout'] = 'auth/logout';
 $route['redirect_auth/(:any)'] = 'auth/redirect_auth/$1';
+$route['signup'] = 'auth/signup';
+$route['register'] = 'auth/signup/register';
+$route['activate/(:any)'] = 'auth/signup/activate_account/$1';
+$route['recovery_password'] = 'auth/forgetpassword/find_account';
+$route['pass_recovery/(:any)'] = 'auth/forgetpassword/recovery_password/$1';
+$route['recover'] = 'auth/forgetpassword/recover';
 
 $route['invite'] = 'mail/invite';
 $route['invitation'] = 'invite';

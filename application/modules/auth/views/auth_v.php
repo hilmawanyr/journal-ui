@@ -45,6 +45,39 @@
       <?= $this->session->flashdata('account_not_found') ?>
     </div>
   <?php endif; ?>
+
+  <?php if ($this->session->flashdata('fail')) : ?>
+    <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <i class="icon fa fa-frown-o"></i> Oops!
+      <?= $this->session->flashdata('fail') ?>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($this->session->flashdata('success')) : ?>
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <i class="icon fa fa-smile-o"></i>
+      <?= $this->session->flashdata('success') ?>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($this->session->flashdata('recover_fail')) : ?>
+    <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <i class="icon fa fa-frown-o"></i> Oops!
+      <?= $this->session->flashdata('recover_fail') ?>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($this->session->flashdata('recover_success')) : ?>
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <i class="icon fa fa-smile-o"></i>
+      <?= $this->session->flashdata('recover_success') ?>
+    </div>
+  <?php endif; ?>
+
   <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Please sign in</p>
@@ -67,13 +100,38 @@
       </div>
     </form>
     <br>
-    <a href="#">I forgot my password</a><br>
-    <a href="register.html" class="text-center">Register a new membership</a>
+    <a href="#myModal" data-toggle="modal">I forgot my password</a><br>
+    <a href="<?= base_url('signup') ?>" class="text-center">Register a new membership</a>
 
   </div>
   <!-- /.login-box-body -->
 </div>
 <!-- /.login-box -->
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <form action="<?= base_url('recovery_password') ?>" method="post">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Password Recovery</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group has-feedback">
+            <input type="email" class="form-control" name="email" placeholder="Insert your email" required>
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
 
 <!-- jQuery 3 -->
 <script src="<?= base_url('assets/admin-lte/bower_components/jquery/dist/jquery.min.js') ?>"></script>
