@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Signup extends CI_Controller {
+	public $configCaptcha = [];
 
 	public function __construct()
 	{
@@ -9,10 +10,27 @@ class Signup extends CI_Controller {
 		if ($this->session->userdata('login_sess')) {
 			redirect('/');
 		}
+		$this->configCaptcha = $this->_configCaptcha();
 	}
 
 	public function index() : void
 	{
+		$this->load->helper('captcha');
+
+
+		$cap = create_captcha($this->configCaptcha);
+		
+		$data = array(
+		        'captcha_time'  => $cap['time'],
+		        'ip_address'    => $this->input->ip_address(),
+		        'word'          => $cap['word']
+		);
+
+
+		$query = $this->db->insert_string('captcha', $data);
+		$this->db->query($query);
+		
+		$data['cap'] = $cap;
 		$data['page'] = 'signup_v';
 		$this->load->view('template/template', $data);
 	}
@@ -22,28 +40,48 @@ class Signup extends CI_Controller {
 		extract(PopulateForm());
 		$key = $this->_generateRandomString();
 
-		$data = [
-			'firstname' => $firstname,
-			'lastname' => $lastname,
-			'email' => $email,
-			'password' => password_hash($password, PASSWORD_DEFAULT),
-			'address' => $address,
-			'institution' => $institution,
-			'phone' => $phone,
-			'_key' => $key,
-			'created_at' => date('Y-m-d H:i:s')
-		];
+		$expiration = time() - (int) $this->configCaptcha['expiration'];
 
-		$this->db->insert('signup', $data);
+		$this->db->where('captcha_time < ', $expiration)
+				 ->where('ip_address', $this->input->ip_address())	
+		         ->delete('captcha');
 
-		if ($this->db->affected_rows() == 1) {
-			$this->session->set_flashdata('success','Registration success! Please check your email to activate your account!');
-			$this->_send_mail([$email, $key]);
-		} else {
-			$this->session->set_flashdata('fail','Registration fail!');
+		// Then see if a captcha exists:
+		$sql = 'SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?';
+		$binds = array($captcha, $this->input->ip_address(), $expiration);
+		$query = $this->db->query($sql, $binds);
+		$row = $query->row();
+		
+		if ($row->count == 0) {
+
+			$this->session->set_flashdata('fail','You must submit the word that appears in the image.');
+
+		}else{
+
+			$data = [
+				'firstname' => $firstname,
+				'lastname' => $lastname,
+				'email' => $email,
+				'password' => password_hash($password, PASSWORD_DEFAULT),
+				'address' => $address,
+				'institution' => $institution,
+				'phone' => $phone,
+				'_key' => $key,
+				'created_at' => date('Y-m-d H:i:s')
+			];
+
+			$this->db->insert('signup', $data);
+
+			if ($this->db->affected_rows() == 1) {
+				$this->session->set_flashdata('success','Registration success! Please check your email to activate your account!');
+				$this->_send_mail([$email, $key]);
+			} else {
+				$this->session->set_flashdata('fail','Registration fail!');
+			}
 		}
 
 		redirect('signup','refresh');
+
 	}
 
 	protected function _send_mail(array $data) : void
@@ -124,6 +162,21 @@ class Signup extends CI_Controller {
         return $randomString;
     }
 
+    /**
+     * Config captcha helper
+     */
+    function _configCaptcha() : array
+    {
+    	$config = array(
+				'expiration'	=> $this->config->item('cap_expiration'),
+				'word_length'	=> $this->config->item('cap_word_length'),
+				'img_width'		=> $this->config->item('cap_img_width'),
+		        'img_path'      => FCPATH .'assets/img/captcha/',
+		        'img_url'       => base_url().'assets/img/captcha/'
+		);
+
+		return $config;
+    }
 }
 
 /* End of file Signup.php */

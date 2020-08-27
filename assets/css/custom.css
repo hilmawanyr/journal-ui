@@ -1,0 +1,11 @@
+.form-group.has-feedback .captcha {
+	padding-left:0px;
+}
+
+.form-group .captcha-image {
+	display: contents;
+}
+
+#captcha-img {
+	display: inline-block;
+}

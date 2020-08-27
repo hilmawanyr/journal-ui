@@ -83,3 +83,5 @@ $route['invite'] = 'mail/invite';
 $route['invitation'] = 'invite';
 
 $route['profile/(:any)'] = 'profile/detail/$1';
+
+$route['captcha/refresh'] = 'auth/captcha/refresh';
