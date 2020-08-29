@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="<?= base_url('assets/admin-lte/plugins/iCheck/square/blue.css') ?>">
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap">
+  <!-- Custom Css -->
+  <link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/custom.css') ?>">
 </head>
 <style media="screen">
   .login-page {
@@ -73,9 +75,22 @@
         <span class="glyphicon glyphicon-th form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" name="phone" placeholder="Phone" minlength="11" maxlength="13" onkeypress="return isNumber(value)" required>
+        <input type="text" class="form-control" name="phone" placeholder="Phone" minlength="11" maxlength="13" onkeypress="return isNumber(event)" required>
         <span class="glyphicon glyphicon-phone form-control-feedback"></span>
       </div>
+      <div class="form-group has-feedback">
+        <div class="captcha col-sm-6">
+          <input type="text" class="form-control" name="captcha" value="" placeholder="Captcha" required/>
+        </div>
+        <div class="captcha-image col-sm-6">
+          <a href="javascript:void(0);" class="captcha-refresh" ><i class="fa fa-refresh"></i></a>
+          &nbsp; 
+          <div id="captcha-img">
+            <?= $cap['image']; ?>
+          </div>
+        </div>
+      </div>
+      <div class="prefix"></div>
       <div class="row">
         <div class="col-xs-4">
           <button type="submit" class="btn btn-primary btn-block btn-flat">Sign Up</button>
@@ -95,13 +110,19 @@
 <!-- Bootstrap 3.3.7 -->
 <script src="<?= base_url('assets/admin-lte/bower_components/bootstrap/dist/js/bootstrap.min.js') ?>"></script>
 <!-- iCheck -->
-<script src="<?= base_url('assets/admin-lte/lugins/iCheck/icheck.min.js') ?>"></script>
+<script src="<?= base_url('assets/admin-lte/plugins/iCheck/icheck.min.js') ?>"></script>
 <script>
   $(function () {
     $('input').iCheck({
       checkboxClass: 'icheckbox_square-blue',
       radioClass: 'iradio_square-blue',
       increaseArea: '20%' /* optional */
+    });
+
+    $('.captcha-refresh').on('click', function(){
+         $.get('<?php echo base_url().'captcha/refresh'; ?>', function(data){
+             $('#captcha-img').html(data);
+         });
     });
   });
 

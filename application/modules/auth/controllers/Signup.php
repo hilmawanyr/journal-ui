@@ -1,7 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Signup extends CI_Controller {
+class Signup extends CI_Controller 
+{
+	public $configCaptcha;
 
 	public function __construct()
 	{
@@ -9,10 +11,25 @@ class Signup extends CI_Controller {
 		if ($this->session->userdata('login_sess')) {
 			redirect('/');
 		}
+		$this->configCaptcha = $this->_configCaptcha();
 	}
 
 	public function index() : void
 	{
+		$this->load->helper('captcha');
+
+		$cap = create_captcha($this->configCaptcha);
+
+		$data = array(
+		        'captcha_time'  => $cap['time'],
+		        'ip_address'    => $this->input->ip_address(),
+		        'word'          => $cap['word']
+		);
+
+		$query = $this->db->insert_string('captcha', $data);
+		$this->db->query($query);
+		
+		$data['cap'] = $cap;
 		$data['page'] = 'signup_v';
 		$this->load->view('template/template', $data);
 	}
@@ -21,29 +38,52 @@ class Signup extends CI_Controller {
 	{
 		extract(PopulateForm());
 		$key = $this->_generateRandomString();
+		$row = $this->_validate_captcha($captcha);
+		
+		if ($row->count == 0) {
+			$this->session->set_flashdata('fail','You must submit the word that appears in the image.');
 
-		$data = [
-			'firstname' => $firstname,
-			'lastname' => $lastname,
-			'email' => $email,
-			'password' => password_hash($password, PASSWORD_DEFAULT),
-			'address' => $address,
-			'institution' => $institution,
-			'phone' => $phone,
-			'_key' => $key,
-			'created_at' => date('Y-m-d H:i:s')
-		];
-
-		$this->db->insert('signup', $data);
-
-		if ($this->db->affected_rows() == 1) {
-			$this->session->set_flashdata('success','Registration success! Please check your email to activate your account!');
-			$this->_send_mail([$email, $key]);
 		} else {
-			$this->session->set_flashdata('fail','Registration fail!');
+			$data = [
+				'firstname' => $firstname,
+				'lastname' => $lastname,
+				'email' => $email,
+				'password' => password_hash($password, PASSWORD_DEFAULT),
+				'address' => $address,
+				'institution' => $institution,
+				'phone' => $phone,
+				'_key' => $key,
+				'created_at' => date('Y-m-d H:i:s')
+			];
+
+			$this->db->insert('signup', $data);
+
+			if ($this->db->affected_rows() == 1) {
+				$this->session->set_flashdata('success','Registration success! Please check your email to activate your account!');
+				$this->_send_mail([$email, $key]);
+			} else {
+				$this->session->set_flashdata('fail','Registration fail!');
+			}
 		}
 
 		redirect('signup','refresh');
+	}
+
+	protected function _validate_captcha(string $word) : object
+	{
+		$expiration = time() - (int) $this->configCaptcha['expiration'];
+
+		$this->db
+				->where('captcha_time < ', $expiration)
+				->where('ip_address', $this->input->ip_address())	
+		        ->delete('captcha');
+
+		// Then see if a captcha exists:
+		$sql   = 'SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?';
+		$binds = array($word, $this->input->ip_address(), $expiration);
+		$query = $this->db->query($sql, $binds);
+		$row   = $query->row();
+		return $row;
 	}
 
 	protected function _send_mail(array $data) : void
@@ -52,8 +92,8 @@ class Signup extends CI_Controller {
 	      'protocol'  => 'smtp',
 	      'smtp_host' => 'ssl://smtp.gmail.com',
 	      'smtp_port' => 465,
-	      'smtp_user' => 'hilmawan@ubharajaya.ac.id', //email id
-	      'smtp_pass' => '#Hayeer22',
+	      'smtp_user' => SMTP_USER, //email id
+	      'smtp_pass' => SMTP_PASS,
 	      'mailtype'  => 'html',
 	      'charset'   => 'iso-8859-1'
 	    );
@@ -124,6 +164,21 @@ class Signup extends CI_Controller {
         return $randomString;
     }
 
+    /**
+     * Config captcha helper
+     */
+    protected function _configCaptcha() : array
+    {
+    	$config = array(
+				'expiration'	=> $this->config->item('cap_expiration'),
+				'word_length'	=> $this->config->item('cap_word_length'),
+				'img_width'		=> $this->config->item('cap_img_width'),
+		        'img_path'      => FCPATH .'assets/img/captcha/',
+		        'img_url'       => base_url().'assets/img/captcha/'
+		);
+
+		return $config;
+    }
 }
 
 /* End of file Signup.php */
