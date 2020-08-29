@@ -24,8 +24,8 @@ class Forgetpassword extends CI_Controller {
 	      'protocol'  => 'smtp',
 	      'smtp_host' => 'ssl://smtp.gmail.com',
 	      'smtp_port' => 465,
-	      'smtp_user' => 'hilmawan@ubharajaya.ac.id',
-	      'smtp_pass' => '#Hayeer22',
+	      'smtp_user' => SMTP_USER,
+	      'smtp_pass' => SMTP_PASS,
 	      'mailtype'  => 'html',
 	      'charset'   => 'iso-8859-1'
 	    );

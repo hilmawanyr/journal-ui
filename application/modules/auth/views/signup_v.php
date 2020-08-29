@@ -75,7 +75,7 @@
         <span class="glyphicon glyphicon-th form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" name="phone" placeholder="Phone" minlength="11" maxlength="13" onkeypress="return isNumber(value)" required>
+        <input type="text" class="form-control" name="phone" placeholder="Phone" minlength="11" maxlength="13" onkeypress="return isNumber(event)" required>
         <span class="glyphicon glyphicon-phone form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">

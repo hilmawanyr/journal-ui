@@ -18,8 +18,6 @@ class Captcha extends CI_Controller {
 		        'img_url'       => base_url().'assets/img/captcha/'
 		);
 
-
-
 		$cap = create_captcha($config);
 		
 		$data = array(
