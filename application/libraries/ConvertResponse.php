@@ -135,6 +135,7 @@ class ConvertResponse
 		$response['url'] = isset($data->URL) ? $data->URL : '';
 		$response['publisher'] = isset($data->publisher) ? $data->publisher : '';
 		$response['issue'] = isset($data->issue) ? $data->issue : '';
+		$response['date_issue'] = isset($data->issued->{'date-parts'}) ? $data->issued->{'date-parts'}[0][0] : '';
 
 		if ($usedFor == 'default' OR $usedFor == 'xml') {
 			$response['license'] = isset($data->license) ? $data->license : '';
@@ -157,7 +158,7 @@ class ConvertResponse
 											? implode('-', (array)$data->{'published-online'}->{'date-parts'}[0]) 
 											: '';
 		}
-
+		$response['language'] = isset($data->language) ? $data->language : '';		
 		$response['reference'] = isset($data->reference) ? $data->reference : '';
 		return $response;
 	}
@@ -185,6 +186,7 @@ class ConvertResponse
 
 		$response['publisher'] = isset($data->bookOrReportDetails) ? $data->bookOrReportDetails->publisher : '';
 		$response['issue']     = isset($data->journalInfo) ? (isset($data->journalInfo->issue) ? $data->journalInfo->issue : '') : '';
+		$response['date_issue'] = '';
 		$response['license']   = isset($data->license) ? $data->license : '';
 		$response['prefix']    = '';
 		$response['volume']    = isset($data->journalInfo) ? (isset($data->journalInfo->volume) ? $data->journalInfo->volume : '') : '';
@@ -193,6 +195,7 @@ class ConvertResponse
 		$response['member']    = '';
 		$response['reference'] = '';
 		$response['published_online'] = isset($data->firstPublicationDate) ? $data->firstPublicationDate : '';
+		$response['language'] = isset($data->language) ? $data->language : '';
 		return $response;	
 	}
 
