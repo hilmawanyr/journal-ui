@@ -1,8 +1,8 @@
 <?php
 
 	header('Content-type: application/xml');
-	// header('Content-Disposition: attachment; filename:"export.xml"');
-	// header('Content-Transfer-Encoding: binary');
+	header('Content-Disposition: attachment; filename:"export.xml"');
+	header('Content-Transfer-Encoding: binary');
 
 	$dom = new DOMDocument();
 	$dom->encoding = 'utf-8';
