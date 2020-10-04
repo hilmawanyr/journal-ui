@@ -88,3 +88,9 @@ define('CRF_HOST', 'https://api.crossref.org/');
 define('CRF_TOKEN', '');
 
 define('PMC_HOST', 'https://www.ebi.ac.uk/europepmc/webservices/rest/');
+
+define('ORCID_HOST', 'https://pub.orcid.org/v3.0/');
+define('ORCID_BEARER_TOKEN', '');
+
+define('SMTP_USER', '');
+define('SMTP_PASS', '');

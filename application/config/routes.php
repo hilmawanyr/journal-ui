@@ -85,3 +85,8 @@ $route['invitation'] = 'invite';
 $route['profile/(:any)'] = 'profile/detail/$1';
 
 $route['captcha/refresh'] = 'auth/captcha/refresh';
+
+$route['msg_template'] = 'template/msg_template';
+$route['rm_template/(:num)'] = 'template/msg_template/remove/$1';
+$route['detil_template/(:num)'] = 'template/msg_template/detail/$1';
+$route['update_template'] = 'mail/update_template';

@@ -41,6 +41,10 @@ class Mail extends CI_Controller{
     ];
     $this->db->insert('message_template', $data);
     $this->session->set_flashdata('success_template', 'New message template saved!');
+
+    if ($this->input->post('save_from_template_menu')) {
+      redirect('msg_template');
+    }
     redirect('mail');
   }
 
@@ -70,9 +74,11 @@ class Mail extends CI_Controller{
 
   public function update_template()
   {
+    $id = $this->input->post('id');
+    $template = $this->input->post('template');
     $this->db->update('message_template', ['template' => $template, 'updated_at' => date('Y-m-d H:i:s')], ['id' => $id]);
-    $this->session->flashdata('success', 'Update success!');
-    redirect('mail');
+    $this->session->set_flashdata('success_template', 'Update success!');
+    redirect('msg_template');
   }
 
   public function send()

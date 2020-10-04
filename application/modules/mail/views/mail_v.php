@@ -69,7 +69,7 @@
           <a href="#template-modal" data-toggle="modal"><i class="fa fa-plus"></i> Create new template</a>
           <br><br>
           <span id="template-list"></span>
-          <a href="#template-modal" data-toggle="modal">See all template</a>
+          <a href="<?= base_url('msg_template') ?>" data-toggle="modal">See all template</a>
         </div>
       </div>
     </div>
