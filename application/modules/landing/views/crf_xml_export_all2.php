@@ -16,8 +16,10 @@
 		$submain = $dom->createElement('jurnal');
 		$root->appendChild($submain);
 
-		$doinode = $dom->createElement('doi', $value['doi']);
-		$submain->appendChild($doinode);
+		if (!empty($value['doi'])) {
+			$doinode = $dom->createElement('doi', $value['doi']);
+			$submain->appendChild($doinode);
+		}
 
 		if (!empty($value['title'])) {
 			$titlenode = $dom->createElement('title', htmlspecialchars($value['title']));
@@ -38,25 +40,8 @@
 		}
 
 		if (!empty($value['url'])) {
-			// response from EuropePMC
-			if (is_array($value['url'])) {
-				if (count($value['url']) > 1) {
-					$parent_url_node = $dom->createElement('urlCrossref');
-					foreach ($value['url'] as $urls) {
-						$child_url_node = $dom->createElement('url', $urls);
-						$parent_url_node->appendChild($child_url_node);
-					}
-					$submain->appendChild($parent_url_node);				
-				} else {
-					$url_node = $dom->createElement('urlCrossref', implode('', $value['url']));
-					$submain->appendChild($url_node);
-				}
-
-			// response from Crossref
-			} else {
-				$url_node = $dom->createElement('urlCrossref', $value['url']);
-				$submain->appendChild($url_node);	
-			}
+			$url_node = $dom->createElement('urlCrossref', $value['url']);
+			$submain->appendChild($url_node);
 		}
 
 		if (!empty($value['issn'])) {

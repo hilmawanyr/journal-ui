@@ -16,8 +16,10 @@
 		$submain = $dom->createElement('jurnal');
 		$root->appendChild($submain);
 
-		$doinode = $dom->createElement('doi', $value['doi']);
-		$submain->appendChild($doinode);
+		if (!empty($value['doi'])) {
+			$doinode = $dom->createElement('doi', $value['doi']);
+			$submain->appendChild($doinode);
+		}
 
 		if (!empty($value['title'])) {
 			$titlenode = $dom->createElement('title', htmlspecialchars($value['title']));
