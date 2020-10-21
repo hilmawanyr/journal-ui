@@ -45,7 +45,7 @@ class Export extends CI_Controller {
 		$exec   = $this->curl->exec($host, $header);
 		$result = json_decode($exec);
 		$data['data'] = $this->cr->convert_detail('CRF',$result->message,'xml');
-		$this->load->view('xml_export_v', $data);
+		$this->load->view('xml_export_v2', $data);
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Export extends CI_Controller {
 		foreach ($result->resultList->result as $key => $value) {
 			$data['data'] = $this->cr->convert_detail('PMC',$value,'xml');
 		}
-		$this->load->view('xml_export_v', $data);
+		$this->load->view('xml_export_v2', $data);
 	}
 
 	/**
@@ -167,12 +167,12 @@ class Export extends CI_Controller {
 		switch ($host) {
 			case 'CRF':
 				$data['collection'] = $this->_crf_export_all_xml($keyword, $filter, $offset);
-				$this->load->view('crf_xml_export_all', $data);
+				$this->load->view('crf_xml_export_all2', $data);
 				break;
 			
 			default:
 				$data['collection'] = $this->_pmc_export_all_xml($keyword, $filter, $offset);
-				$this->load->view('pmc_xml_export_all', $data);
+				$this->load->view('pmc_xml_export_all2', $data);
 				break;
 		}		
 	}
