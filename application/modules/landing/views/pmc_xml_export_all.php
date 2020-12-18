@@ -1,7 +1,7 @@
 <?php
 
 	header('Content-type: application/xml');
-	header('Content-Disposition: attachment; filename:"export.xml"');
+	header('Content-Disposition: attachment; filename="pmc_xml_bulk_export.xml"');
 	header('Content-Transfer-Encoding: binary');
 
 	$dom = new DOMDocument();
